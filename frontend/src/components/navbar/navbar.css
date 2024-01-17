@@ -1,0 +1,45 @@
+/* Style for the entire navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: #333; */
+  /* color: white; */
+  padding: 10px;
+  min-height: 90px;
+}
+@media screen and (max-width: 566px) {
+  .navbar {
+    visibility: hidden;
+  }
+}
+
+/* Style for the logo */
+.logo {
+  font-size: 1.5rem;
+}
+
+/* Style for the middle section with navigation links */
+.middle ul,
+.right ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+.middle li,
+.right li {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+/* Style for the right section with authentication links */
+.right li {
+  margin: 0 5px;
+}
+
+/* Add hover effect for links */
+.middle li:hover,
+.right li:hover {
+  text-decoration: underline;
+}

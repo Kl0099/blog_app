@@ -1,0 +1,6 @@
+.avatar {
+  opacity: 1;
+}
+.avatar :hover {
+  opacity: 0.7;
+}

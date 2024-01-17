@@ -1,0 +1,14 @@
+.contant-left {
+  display: "flex";
+  flex-direction: "column";
+  gap: "10px";
+  align-items: "center";
+}
+@media screen and (max-width: 768px) {
+  .contant-left {
+    align-items: flex-start;
+  }
+}
+Link {
+  text-decoration: none;
+}
