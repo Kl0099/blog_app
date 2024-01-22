@@ -1,5 +1,18 @@
 const mongoose = require("mongoose")
 
+const CommentSchema = mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    comment: {
+      type: String,
+    },
+  },
+  { timestamps: true } // Add timestamps to the CommentSchema
+)
+
 const BlogSchema = mongoose.Schema(
   {
     title: {
@@ -30,21 +43,7 @@ const BlogSchema = mongoose.Schema(
         ref: "User",
       },
     ],
-    comments: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-        comment: {
-          type: String,
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now(),
-        },
-      },
-    ],
+    comments: [CommentSchema],
   },
   { timestamps: true }
 )

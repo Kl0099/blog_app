@@ -5,21 +5,33 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import "./login.css"
 import { loginuser } from "../../actions/user.js"
+import { Avatar, Button, Dialog } from "@mui/material"
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   // const history = useHistory()
   const navigate = useNavigate()
 
+  const [showPassword, setShowPassword] = useState(false)
   const loginHandlesubmit = async (e) => {
     e.preventDefault()
-    const success = await dispatch(loginuser(email, password))
+    setLoading(true) // Set loading to true when the login request is initiated
 
-    // console.log(success)
+    const success = dispatch(loginuser(email, password))
+
+    // Check if login was successful
+    if (success) {
+      // Navigate to home page if login successful
+      navigate("/")
+    }
+
+    setLoading(false) // Reset loading state after the login attempt
   }
   const { isAuthenticated, user } = useSelector((state) => state.user)
-  console.log(isAuthenticated, user)
+  // console.log(isAuthenticated, user)
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/")
@@ -28,7 +40,13 @@ const Login = () => {
   return (
     <div className="container">
       <header className="container_header">
-        <h1 className="container_title">login page</h1>
+        <Avatar
+          src={
+            "https://logos.flamingtext.com/Word-Logos/blog-design-sketch-name.png"
+          }
+          style={{ width: "150px", height: "150px" }}
+        />
+        <h1 className="container_title">Login page</h1>
         <form
           onSubmit={loginHandlesubmit}
           className="container_form"
@@ -44,15 +62,25 @@ const Login = () => {
           />
 
           <input
-            className="password"
             type="password"
+            className="password"
             name="password"
             placeholder="password"
             onChange={(e) => {
               setPassword(e.target.value)
             }}
+            autoComplete="current-password"
           />
-          <button type="submit">login</button>
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="secondary"
+            style={{ marginTop: "20px" }}
+            disabled={loading}
+          >
+            Login
+          </Button>
         </form>
       </header>
     </div>

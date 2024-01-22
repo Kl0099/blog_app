@@ -1,6 +1,8 @@
 const Blog = require("../models/Blog")
 const User = require("../models/User")
 const cloudinary = require("cloudinary")
+const { model } = require("mongoose")
+
 exports.createBlog = async (req, res) => {
   try {
     const cloud = await cloudinary.v2.uploader.upload(req.body.image, {
@@ -33,6 +35,29 @@ exports.createBlog = async (req, res) => {
       success: false,
       message: error.message,
     })
+  }
+}
+exports.convertblog = async (req, res) => {
+  try {
+    const html =
+      "<h1>dfasdfasd</h1><h2>sdfaasdfsd</h2><h3>dfgsdfgsg</h3><ol><li><strong>akrjteriaubjgg</strong></li><li><strong>;;khaiabfaf</strong></li><li><strong>skfnaoiuabkjabfafa</strong></li><li><strong><em>allfjpifhsdfasff</em></strong></li></ol>"
+    const conHtmlToPlane = async (html) => {
+      const cleanDoc = DOMPurify.sanitize(html, {
+        USE_PROFILES: { html: true },
+      })
+
+      const plainText = cleanDoc.textContent
+      return plainText
+    }
+
+    const plainText = await conHtmlToPlane(html)
+
+    // const ans = conHtmlToPlane(htmltext)
+    console.log(plainText)
+    res.status(200).json({ plainText })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ error })
   }
 }
 exports.likeAndDislike = async (req, res) => {
@@ -115,27 +140,29 @@ exports.deleteComment = async (req, res) => {
         success: false,
         message: "not found",
       })
-    // console.log(blog.owner.toString())
-    // console.log(blog.comments)
     // console.log(req.params.id)
-    // console.log(blog)
+    // console.log(blog.owner == req.user.id)
+    // console.log(req.body.commentId)
+    // console.log(req.user._id)
+    // console.log(req.body)
+    // console.log(blog.owner)
+    // console.log(req.user.id)
 
-    if (blog.owner.toString() === req.user.id.toString()) {
+    if (blog.owner == req.user.id) {
       blog.comments.forEach((item, index) => {
-        //here commentId from body so we can easily remove selected comment
-        if (item._id.toString() === req.body.commentId.toString()) {
-          return blog.comment.splice(index, 1)
+        if (item._id == req.body.commentId) {
+          blog.comments.splice(index, 1)
         }
       })
       await blog.save()
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "selected comment deleted ",
       })
     } else {
       blog.comments.forEach((item, index) => {
-        if (item.user.toString() === req.user.id.toString()) {
-          return blog.comments.splice(index, 1)
+        if (item.user == req.user._id) {
+          blog.comments.splice(index, 1)
         }
       })
       await blog.save()
@@ -145,6 +172,7 @@ exports.deleteComment = async (req, res) => {
       })
     }
   } catch (error) {
+    console.log("backend error: ", error)
     res.status(500).json({
       success: false,
       message: error.message,
@@ -236,7 +264,15 @@ exports.getSingleblog = async (req, res) => {
     const blog = await Blog.findById(req.params.id)
       .populate("likes")
       .populate("owner")
-      .populate("comments")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+          model: "User",
+          select: "avatar name",
+        },
+      })
+
     if (!blog)
       return res.status(404).json({ success: false, message: "not found" })
     res.status(200).json({ success: true, blog })

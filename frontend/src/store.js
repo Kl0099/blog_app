@@ -7,7 +7,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   blogs: blogSliceReducer,
   singleBlog: singleBlogSliceReducer,
-  userBlogs: userBlogsSliceReducer,
+  getuser: userBlogsSliceReducer,
 })
 const store = configureStore({
   reducer: rootReducer,

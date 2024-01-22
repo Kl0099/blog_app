@@ -13,8 +13,9 @@ const Home = () => {
   useEffect(() => {
     // Load user data only on the initial mount
     dispatch(getAllblogs())
-    // console.log("get all blog")
-  }, [dispatch])
+
+    console.log("home page ")
+  }, [])
   const { loading, blogs } = useSelector((state) => state.blogs)
   // console.log(loading)
   // console.log(blogs)
@@ -47,14 +48,14 @@ const Home = () => {
           <Box sx={{ flexGrow: 1 }}>
             <Grid
               container
-              spacing={{ xs: 2, md: 4 }}
-              columns={{ xs: 4, sm: 8, md: 12 }}
+              spacing={{ xs: 2, md: 6 }}
+              columns={{ xs: 1, sm: 8, md: 12 }}
             >
               {blogs &&
                 blogs.map((blog) => (
                   <Grid
                     item
-                    xs={3}
+                    xs={1}
                     sm={4}
                     md={4}
                     key={blog._id}
@@ -68,6 +69,7 @@ const Home = () => {
                       description={blog.description}
                       createdAt={blog.createdAt}
                       title={blog.title}
+                      likes={blog && blog.likes}
                     />
                   </Grid>
                 ))}

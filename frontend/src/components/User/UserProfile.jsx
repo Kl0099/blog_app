@@ -7,10 +7,11 @@ import Grid from "@mui/material/Grid"
 import { useDispatch, useSelector } from "react-redux"
 import Blog from "../blogs/Blog"
 import {
-  edituserprofile,
+  edituser,
   getBlogsOfUser,
   getUser,
   loaduser,
+  logoutUser,
 } from "../../actions/user"
 import Loader from "../Loader/Loader"
 import { FaEdit } from "react-icons/fa"
@@ -20,15 +21,47 @@ const UserProfile = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
 
-  const { loading, user, isAuthenticated } = useSelector((state) => state.user)
+  const { editloading, loading, user, isAuthenticated, message } = useSelector(
+    (state) => state.user
+  )
 
   const [toggle, setToggle] = useState(false)
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
+  const [newAvatar, setNewAvatar] = useState("")
   const [avatar, setAvatar] = useState("")
+  const [editload, setEditLoad] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    dispatch(edituser(email, name, newAvatar))
+    setEditLoad(!editload)
+  }
+  useEffect(() => {
+    dispatch(getUser(id))
+  }, [id, dispatch])
+  const { loading: getuserloading, userBlogs: getuser } = useSelector(
+    (state) => state.getuser
+  )
+  // console.log(getuser)
+  useEffect(() => {
+    if (message) {
+      setEditLoad(!editload)
+      setToggle(!toggle)
+      dispatch(loaduser())
+      console.log(message)
+    }
+  }, [message])
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email)
+      setName(user.name)
+      setAvatar(user.avatar)
+    }
+  }, [user])
+  const handlelogout = () => {
+    dispatch(logoutUser())
+    navigate("/")
   }
 
   const handleImageChange = (e) => {
@@ -37,158 +70,180 @@ const UserProfile = () => {
     Reader.readAsDataURL(file)
     Reader.onload = () => {
       if (Reader.readyState === 2) {
-        setAvatar(Reader.result)
+        setNewAvatar(Reader.result)
       }
     }
   }
 
   return (
     <div>
-      {loading ? (
+      {getuserloading ? (
         <Loader />
       ) : (
         <div>
-          <Container>
-            <Box
-              height={"50vh"}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              flexDirection={"column"}
-              gap={"20px"}
-            >
-              <Avatar
-                style={{
-                  width: "200px",
-                  height: "200px",
-                }}
-                src={user && user.avatar.url}
-              ></Avatar>
-              <Typography variant="h4">{user && user.name}</Typography>
-              {isAuthenticated && user._id === id ? (
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <Button
-                    variant="contained"
-                    color="error"
+          {getuser && (
+            <div>
+              <Container>
+                <Box
+                  height={"50vh"}
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  flexDirection={"column"}
+                  gap={"20px"}
+                >
+                  <Avatar
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                    }}
+                    src={getuser && getuser.avatar.url}
+                  ></Avatar>
+                  <Typography variant="h4">
+                    {getuser && getuser.name}
+                  </Typography>
+                  {isAuthenticated &&
+                  user &&
+                  getuser._id === id &&
+                  user._id === id ? (
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={handlelogout}
+                      >
+                        Log out
+                      </Button>
+                      <Button
+                        onClick={() => setToggle(!toggle)}
+                        variant="contained"
+                        color="success"
+                      >
+                        Edit
+                      </Button>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                </Box>
+              </Container>
+              <Container maxWidth="xl">
+                <Box sx={{ flexGrow: 1 }}>
+                  <Grid
+                    container
+                    spacing={{ xs: 2, md: 4 }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
                   >
-                    Log out
-                  </Button>
-                  <Button
-                    onClick={() => setToggle(!toggle)}
-                    variant="contained"
-                    color="success"
-                  >
-                    Edit
-                  </Button>
-                </div>
-              ) : null}
-            </Box>
-          </Container>
-          <Container maxWidth="xl">
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid
-                container
-                spacing={{ xs: 2, md: 4 }}
-                columns={{ xs: 4, sm: 8, md: 12 }}
+                    {getuser &&
+                      getuser.blogs &&
+                      getuser.blogs.map((blog, index) => (
+                        <Grid
+                          item
+                          xs={3}
+                          sm={4}
+                          md={4}
+                          key={getuser && blog._id ? blog._id : index}
+                        >
+                          <Blog
+                            blogId={getuser && getuser.blogs && blog._id}
+                            image={getuser && getuser.blogs && blog.image.url}
+                            ownerId={getuser && blog._id}
+                            ownername={getuser && blog.name}
+                            owneravatar={
+                              getuser && getuser.blogs && getuser.avatar.url
+                            }
+                            description={getuser && blog.description}
+                            createdAt={getuser && blog.createdAt}
+                            title={getuser && blog.title}
+                          />
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <div>
+                    {getuser.blogs.length == 0 ? (
+                      <Typography variant="h6">
+                        You Does Not create any blog
+                      </Typography>
+                    ) : null}
+                  </div>
+                </Box>
+              </Container>
+              <Dialog
+                open={toggle}
+                onClose={() => setToggle(!toggle)}
               >
-                {user &&
-                  user.blogs.map((blog) => (
-                    <Grid
-                      item
-                      xs={3}
-                      sm={4}
-                      md={4}
-                      key={blog._id}
+                <form
+                  onSubmit={handleSubmit}
+                  style={{
+                    minWidth: "500px",
+                    height: "60vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-evenly",
+                    gap: "20px",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Avatar
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                    }}
+                    src={newAvatar !== "" ? newAvatar : avatar}
+                  />
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    onChange={handleImageChange}
+                  />
+                  <input
+                    style={{
+                      padding: "10px",
+                      borderRadius: "20px",
+                      outline: "none",
+                    }}
+                    type="email"
+                    name="email"
+                    id="emial"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+
+                  <input
+                    style={{
+                      padding: "10px",
+                      borderRadius: "20px",
+                      outline: "none",
+                    }}
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={editload}
                     >
-                      <Blog
-                        blogId={blog._id}
-                        image={user.blogs && blog.image.url}
-                        ownerId={user && blog._id}
-                        ownername={user && blog.name}
-                        owneravatar={user.blogs && user.avatar.url}
-                        description={blog.description}
-                        createdAt={blog.createdAt}
-                        title={blog.title}
-                      />
-                    </Grid>
-                  ))}
-              </Grid>
-            </Box>
-          </Container>
-          <Dialog
-            open={toggle}
-            onClose={() => setToggle(!toggle)}
-          >
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                minWidth: "500px",
-                height: "60vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-evenly",
-                gap: "20px",
-                flexDirection: "column",
-              }}
-            >
-              <Avatar
-                style={{
-                  width: "100px",
-                  height: "100px",
-                }}
-                src={avatar}
-              />
-              <input
-                type="file"
-                name="file"
-                id="file"
-                onChange={handleImageChange}
-              />
-              <input
-                style={{
-                  padding: "10px",
-                  borderRadius: "20px",
-                  outline: "none",
-                }}
-                type="email"
-                name="email"
-                id="emial"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <input
-                style={{
-                  padding: "10px",
-                  borderRadius: "20px",
-                  outline: "none",
-                }}
-                type="text"
-                name="name"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disabled={loading}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => setToggle(!toggle)}
-                >
-                  Back
-                </Button>
-              </div>
-            </form>
-          </Dialog>
+                      Edit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => setToggle(!toggle)}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </form>
+              </Dialog>
+            </div>
+          )}
         </div>
       )}
     </div>

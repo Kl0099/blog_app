@@ -16,8 +16,11 @@ import {
   userProfilesuccess,
   userProfilefailure,
   edituserProfileRequest,
-  edituserProfilesuccess,
-  edituserProfilefailure,
+  edituserProfileSuccess,
+  edituserProfileFailure,
+  logoutrequest,
+  logoutsuccess,
+  logoutfailure,
 } from "../reducers/user.js" // Update the import path based on your actual file structure
 
 export const loginuser = (email, password) => async (dispatch) => {
@@ -40,13 +43,14 @@ export const loginuser = (email, password) => async (dispatch) => {
 }
 
 export const registeruser =
-  (email, name, password, avatar) => async (dispatch) => {
+  (email, password, avatar, name) => async (dispatch) => {
     try {
       dispatch(registerrequest())
       const { data } = await axios.post(
         "http://localhost:4000/api/v1/register",
         { email, password, name, avatar },
         {
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
@@ -100,5 +104,36 @@ export const getUser = (id) => async (dispatch) => {
   } catch (error) {
     console.log(error)
     dispatch(userProfilefailure(error.response.data.message))
+  }
+}
+export const edituser = (email, name, avatar) => async (dispatch) => {
+  try {
+    dispatch(edituserProfileRequest())
+    const { data } = await axios.put(
+      `http://localhost:4000/api/v1/user/updateprofile`,
+      { email, name, avatar },
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    dispatch(edituserProfileSuccess(data.message))
+  } catch (error) {
+    console.log(error)
+    dispatch(edituserProfileFailure(error.response.data.message))
+  }
+}
+export const logoutUser = () => async (dispatch) => {
+  try {
+    dispatch(logoutrequest())
+    const { data } = await axios.get("http://localhost:4000/api/v1/logout", {
+      withCredentials: true,
+    })
+    dispatch(logoutsuccess(data.message))
+  } catch (error) {
+    console.log(error)
+    dispatch(logoutfailure(error.response.data.message))
   }
 }

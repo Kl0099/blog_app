@@ -11,10 +11,12 @@ const {
   updateBlog,
   getAllBlogs,
   getSingleblog,
+  convertblog,
 } = require("../controllers/Blog")
 
 router.route("/Blog/create").post(isAuthenticated, createBlog)
 router.route("/Blog").get(getAllBlogs)
+router.route("/blog/convert").post(convertblog)
 router.route("/BlogSingle/:id").get(getSingleblog)
 router
   .route("/Blog/:id")

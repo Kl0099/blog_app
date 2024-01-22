@@ -4,15 +4,17 @@ const initialState = {
   user: null,
   error: null,
   loading: false,
+  editloading: false,
+  message: null,
 }
-
-export const userBlogsSlice = createSlice({
-  name: "userBlogsSlice",
-  initialState: {
-    loading: false,
-    userBlogs: null,
-    error: null,
-  },
+const userBloginitialState = {
+  loading: false,
+  userBlogs: null,
+  error: null,
+}
+export const getuserSlice = createSlice({
+  name: "getuserSlice",
+  initialState: userBloginitialState,
   reducers: {
     userBlogrequest: (state, action) => {
       state.loading = true
@@ -45,7 +47,7 @@ export const {
   userProfilerequest,
   userProfilesuccess,
   userProfilefailure,
-} = userBlogsSlice.actions
+} = getuserSlice.actions
 
 export const userSlice = createSlice({
   name: "userSlice",
@@ -63,6 +65,20 @@ export const userSlice = createSlice({
       state.loading = false
       state.error = action.payload
       state.isAuthenticated = false
+    },
+    logoutrequest: (state, action) => {
+      state.loading = true
+    },
+    logoutsuccess: (state, action) => {
+      state.loading = false
+      state.user = null
+      state.isAuthenticated = false
+      state.message = action.payload
+    },
+    logoutfailure: (state, action) => {
+      state.loading = false
+      state.error = action.payload
+      state.isAuthenticated = true
     },
 
     registerrequest: (state, action) => {
@@ -92,6 +108,17 @@ export const userSlice = createSlice({
       state.error = action.payload
       state.isAuthenticated = false
     },
+    edituserProfileRequest: (state, action) => {
+      state.editloading = true
+    },
+    edituserProfileSuccess: (state, action) => {
+      state.loading = false
+      state.message = action.payload
+    },
+    edituserProfileFailure: (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    },
   },
 })
 export const {
@@ -104,8 +131,14 @@ export const {
   loaduserrequest,
   loadusersuccess,
   loaduserfailure,
+  edituserProfileRequest,
+  edituserProfileSuccess,
+  edituserProfileFailure,
+  logoutrequest,
+  logoutsuccess,
+  logoutfailure,
 } = userSlice.actions
 
 export const userSliceReducer = userSlice.reducer
-export const userBlogsSliceReducer = userBlogsSlice.reducer
-export const edituserSliceReducer = edituserSlice.reducer
+export const userBlogsSliceReducer = getuserSlice.reducer
+// export const edituserSliceReducer = edituserSlice.reducer

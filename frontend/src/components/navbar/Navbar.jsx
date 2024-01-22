@@ -2,10 +2,12 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { Container, Button, Avatar } from "@mui/material"
+import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import Typography from "@mui/material/Typography"
 import "./navbar.css"
 import "../../App.css"
 import Loader from "../Loader/Loader"
+import User from "../User/User"
 
 const Navbar = () => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user)
@@ -14,6 +16,9 @@ const Navbar = () => {
     color: "black",
     cursor: "pointer",
   }
+  const buttonStyle = {
+    borderRadius: "20px",
+  }
   // console.log(user)
   return (
     <div>
@@ -21,8 +26,18 @@ const Navbar = () => {
         <Loader />
       ) : (
         <div className="navbar">
-          <div className="logo">logo</div>
-          <div className="middle">
+          <div className="logo">
+            <Avatar
+              src={
+                "https://logos.flamingtext.com/Word-Logos/blog-design-sketch-name.png"
+              }
+              style={{ width: "150px", height: "150px" }}
+            />
+          </div>
+          <div
+            className="middle"
+            style={{ fontSize: "22px" }}
+          >
             <ul>
               <li>
                 <Link
@@ -60,12 +75,12 @@ const Navbar = () => {
               )}
 
               {isAuthenticated && (
-                <li>
+                <li style={{ fontSize: "22px", textDecoration: "none" }}>
                   <Link
-                    style={LinkStyle}
-                    to={"/signout"}
+                    to={"/logout"}
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    signout
+                    Logout
                   </Link>
                 </li>
               )}
@@ -74,17 +89,50 @@ const Navbar = () => {
           <div className="right">
             <ul>
               {!isAuthenticated && (
-                <div>
-                  <li>
-                    <Link to={"/login"}>login</Link>
+                <div
+                  style={{
+                    display: "flex",
+
+                    gap: "20px",
+                    borderRadius: "10px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "10px",
+                  }}
+                >
+                  <li style={{ fontSize: "22px", textDecoration: "none" }}>
+                    <Link
+                      to={"/login"}
+                      style={{ textDecoration: "none" }}
+                    >
+                      Login
+                    </Link>
                   </li>
                   <li>
-                    <Link to={"/register"}>register</Link>
+                    <Link to={"/register"}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={buttonStyle}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          {" "}
+                          <PersonAddIcon /> signUp
+                        </div>
+                      </Button>
+                    </Link>
                   </li>
                 </div>
               )}
 
-              {isAuthenticated && (
+              {isAuthenticated && user && (
                 <>
                   <div
                     style={{
@@ -93,16 +141,11 @@ const Navbar = () => {
                       gap: "5px",
                     }}
                   >
-                    <Avatar
-                      src={user && user.avatar.url}
-                      alt={user && user.name}
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                      }}
+                    <User
+                      userId={user && user._id}
+                      name={user && user.name}
+                      avatar={user && user.avatar && user.avatar.url}
                     />
-                    <span>{user && user.name}</span>
                   </div>
                 </>
               )}

@@ -7,8 +7,16 @@ const cloudinary = require("cloudinary")
 exports.register = async (req, res) => {
   try {
     // console.log(req.body)
-    const { email, password, name, avatar } = req.body
-    // console.log(email, password, name)
+    const {
+      email: email,
+      password: password,
+      name: name,
+      avatar: avatar,
+    } = req.body
+    // console.log(req.body)
+    // console.log("email : ", email)
+    // console.log("name : ", name)
+    // console.log("avatar : ", avatar)
     const cloud = await cloudinary.v2.uploader.upload(avatar, {
       folder: "blogs_avatars",
     })
@@ -35,6 +43,7 @@ exports.register = async (req, res) => {
       httpOnly: true,
       secure: false,
     }
+    // console.log(user)
 
     res.status(200).cookie("token", token, options).json({
       success: true,
@@ -62,11 +71,11 @@ exports.login = async (req, res) => {
         message: "User not found",
       })
     }
-    console.log("input password : ", password)
-    console.log("user password : ", user.password)
+    // console.log("input password : ", password)
+    // console.log("user password : ", user.password)
 
     let isValid = bcrypt.compareSync(password, user.password)
-    console.log(isValid)
+    // console.log(isValid)
     if (!isValid) {
       return res.status(401).json({
         success: false,
@@ -74,19 +83,21 @@ exports.login = async (req, res) => {
       })
     }
     const token = await user.generateToken()
+    // console.log(token)
     const options = {
-      expires: new Date(Date.now() + 90 * 24 * 3600 * 1000),
+      expires: new Date(Date.now() + 7 * 24 * 3600 * 1000),
       httpOnly: true,
       secure: false,
     }
-    res.status(200).cookie("token", token, options).json({
+    res.cookie("token", token, options)
+    res.status(200).json({
       success: true,
       user,
       token,
       message: "login successful",
     })
   } catch (error) {
-    console.log(error)
+    console.log("login error : ", error)
     res.status(500).json({
       success: false,
       message: error.message,
@@ -98,16 +109,18 @@ exports.updateProfile = async (req, res) => {
   try {
     const olduser = await User.findById(req.user._id).select("+password")
     const { name, email, avatar } = req.body
-    console.log("old user: " + olduser)
+    // console.log("old user: " + olduser)
     // console.log("avatr", olduser.avatar.public_id)
     // console.log(avatar.toString() === olduser.avatar.url.toString())
     // console.log(olduser.name, olduser.email, olduser.password)
     // console.log(olduser)
     // console.log(email, password, name)
     // console.log(name, email, avatar)
-    console.log(name !== olduser.name)
-    console.log(email !== olduser.email)
-    console.log(avatar.toString() !== olduser.avatar.url.toString())
+    // console.log(name !== olduser.name)
+    // console.log(email !== olduser.email)
+    // console.log(
+    //   avatar.toString() !== olduser.avatar.url.toString() && avatar !== ""
+    // )
 
     if (name !== olduser.name) {
       olduser.name = name
@@ -115,7 +128,7 @@ exports.updateProfile = async (req, res) => {
     if (email !== olduser.email) {
       olduser.email = email
     }
-    if (avatar.toString() !== olduser.avatar.url.toString()) {
+    if (avatar.toString() !== olduser.avatar.url.toString() && avatar !== "") {
       await cloudinary.v2.uploader.destroy(olduser.avatar.public_id)
       const cloud = await cloudinary.v2.uploader.upload(avatar, {
         folder: "blogs_avatars",
@@ -124,19 +137,13 @@ exports.updateProfile = async (req, res) => {
       olduser.avatar.public_id = cloud.public_id
     }
 
-    console.log("Before saving: ", {
-      email: olduser.email,
-      name: olduser.name,
-      avatar: olduser.avatar.url,
-    })
-
     await olduser.save()
 
-    console.log("After saving: ", {
-      email: olduser.email,
-      name: olduser.name,
-      avatar: olduser.avatar.url,
-    })
+    // console.log("After saving: ", {
+    //   email: olduser.email,
+    //   name: olduser.name,
+    //   avatar: olduser.avatar.url,
+    // })
 
     res.status(200).json({
       success: true,

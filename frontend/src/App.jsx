@@ -21,8 +21,8 @@ function App() {
   useEffect(() => {
     // Load user data only on the initial mount
     dispatch(loaduser())
-    // console.log("load effect")
-  }, [dispatch])
+    console.log("load effect")
+  }, [])
 
   const { isAuthenticated, user } = useSelector((state) => state.user)
   // console.log(user)

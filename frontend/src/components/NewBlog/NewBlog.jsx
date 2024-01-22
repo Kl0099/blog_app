@@ -1,10 +1,42 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Paper from "@mui/material/Paper"
 import Grid from "@mui/material/Grid"
 import Blog from "../blogs/Blog"
 import { Container, Button } from "@mui/material"
 import Typography from "@mui/material/Typography"
+import { Link, useParams, useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import Loader from "../Loader/Loader"
+import { createBlog } from "../../actions/blog"
+import "react-quill/dist/quill.snow.css" // Import the styles
+import ReactQuill, { Quill } from "react-quill"
+
+const toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  ["blockquote", "code-block"],
+
+  [{ header: 1 }, { header: 2 }], // custom button values
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ direction: "rtl" }], // text direction
+
+  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+
+  ["clean"], // remove formatting button
+]
+
 const NewBlog = () => {
+  const { isAuthenticated, user, loading } = useSelector((state) => state.user)
+  // console.log(isAuthenticated, user)
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const inputStyle = {
     padding: "10px",
     width: "100%",
@@ -27,6 +59,10 @@ const NewBlog = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    dispatch(createBlog(title, description, image))
+    navigate(`/`)
+    window.location.reload()
   }
   return (
     <div
@@ -34,87 +70,94 @@ const NewBlog = () => {
         display: "flex",
       }}
     >
-      <Container
-        maxWidth="lg"
-        sx={{ height: "90vh" }}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        {/* <Typography variant="h2">Create a new Blog</Typography> */}
-        <form
+      {loading ? (
+        <Loader />
+      ) : (
+        <Container
+          maxWidth="lg"
+          sx={{ height: "90vh" }}
           style={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            gap: "20px",
             flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-around",
           }}
-          onSubmit={handleSubmit}
         >
-          {image === "" ? null : (
-            <img
-              width={"100%"}
-              height={"200px"}
-              src={image}
-              style={{ borderRadius: "20px" }}
-              alt="image"
+          {/* <Typography variant="h2">Create a new Blog</Typography> */}
+          <form
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              gap: "20px",
+              flexDirection: "column",
+            }}
+            onSubmit={handleSubmit}
+          >
+            {image === "" ? null : (
+              <img
+                width={"500px"}
+                height={"400px"}
+                src={image}
+                style={{ borderRadius: "20px" }}
+                alt="image"
+              />
+            )}
+
+            <input
+              accept="image/*"
+              required
+              type="file"
+              name="file"
+              id="file"
+              onChange={handleimagechange}
             />
-          )}
 
-          <input
-            required
-            type="file"
-            name="file"
-            id="file"
-            onChange={handleimagechange}
-          />
+            <input
+              required
+              style={inputStyle}
+              placeholder="Title...."
+              type="text"
+              name="title"
+              id="title"
+              onChange={(e) => {
+                setTitle(e.target.value)
+              }}
+            />
+            <ReactQuill
+              modules={{
+                toolbar: toolbarOptions,
+              }}
+              style={{
+                width: "100%",
+                minHeight: "200px",
+                borderRadius: "20px",
+              }}
+              theme="snow" // You can customize the theme
+              onChange={(value) => setDescription(value)}
+            />
 
-          <input
-            required
-            style={inputStyle}
-            placeholder="Title...."
-            type="text"
-            name="title"
-            id="title"
-            onChange={(e) => {
-              setTitle(e.target.value)
-            }}
-          />
-
-          <textarea
-            required
-            style={inputStyle}
-            placeholder="Description........"
-            name="description"
-            id="description"
-            cols="50"
-            rows="20"
-            onChange={(e) => {
-              setDescription(e.target.value)
-            }}
-          ></textarea>
-
-          <div style={{ display: "flex", gap: "10px" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-            >
-              Edit
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-            >
-              Back
-            </Button>
-          </div>
-        </form>
-      </Container>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+              >
+                Create
+              </Button>
+              <Button
+                variant="primary"
+                color="inherit"
+                onClick={() => {
+                  navigate(-1)
+                }}
+              >
+                Back
+              </Button>
+            </div>
+          </form>
+        </Container>
+      )}
     </div>
   )
 }

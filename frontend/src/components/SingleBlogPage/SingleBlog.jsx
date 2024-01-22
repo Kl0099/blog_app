@@ -1,29 +1,51 @@
 import React, { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
-import Typography from "@mui/material/Typography"
+import { Typography, Button } from "@mui/material"
 import Avatar from "@mui/material/Avatar"
 import { Container, Box } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import User from "../User/User"
 import { FaEdit } from "react-icons/fa"
-import { getSingleBlog } from "../../actions/blog"
+import {
+  commentaddandupdate,
+  deleteComment,
+  getSingleBlog,
+} from "../../actions/blog"
+import "react-quill/dist/quill.snow.css" // Import the styles
+import ReactQuill, { Quill } from "react-quill"
+import { formatDistanceToNow } from "date-fns"
+import DeleteIcon from "@mui/icons-material/Delete"
+import CommentCard from "../commentcard/commentcard"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 
 const SingleBlog = () => {
   const { id } = useParams()
   // console.log(id)
+
+  const [comment, setComment] = useState("")
   const [blog, setBlog] = useState(null)
+  const [liked, setLiked] = useState(false)
   const dispatch = useDispatch()
+  const handleformsubmit = (e) => {
+    e.preventDefault()
+    console.log("comment", comment)
+    dispatch(commentaddandupdate(id, comment))
+  }
   useEffect(() => {
     dispatch(getSingleBlog(id))
     // console.log("single blog")
-  }, [dispatch, id])
-  const { loading, singleBlog } = useSelector((state) => state.singleBlog)
+  }, [dispatch])
+  const { loading, singleBlog, message, error } = useSelector(
+    (state) => state.singleBlog
+  )
+  // console.log(singleBlog)
   const { isAuthenticated, user } = useSelector((state) => state.user)
   // console.log(singleBlog)
-  useEffect(() => {
-    setBlog(singleBlog)
-  }, [singleBlog])
-
+  // useEffect(() => {
+  //   setBlog(singleBlog)
+  // }, [singleBlog])
+  // console.log(liked)
   // const fetchData = async () => {
   //   // Now, you can safely work with the blogs
   //   let blog = blogs.map((blog) => {
@@ -38,9 +60,24 @@ const SingleBlog = () => {
   //   setBlog(blog[0])
   //   console.log(blog)
   // }
-
+  const handlelike = () => {
+    setLiked(!liked)
+    console.log(liked)
+  }
   const isValid =
-    blog && isAuthenticated === true && blog.owner._id === user._id
+    singleBlog && isAuthenticated === true && singleBlog.owner._id === user._id
+
+  useEffect(() => {
+    if (message) {
+      dispatch(getSingleBlog(id))
+      // dispatch(loaduser())
+      // window.location.reload()
+      console.log("singlebog message : ", message)
+    }
+    if (error) {
+      console.log("comment card useeffect error: " + error)
+    }
+  }, [message, id, dispatch, error])
 
   return (
     <div>
@@ -58,7 +95,7 @@ const SingleBlog = () => {
             <img
               width="100%"
               height="600px"
-              src={blog && blog.image.url}
+              src={singleBlog && singleBlog.image.url}
               style={{
                 objectFit: "cover",
                 borderRadius: "20px",
@@ -68,24 +105,42 @@ const SingleBlog = () => {
             <div
               style={{
                 display: "flex",
-                gap: "10px",
+                gap: "20px",
                 position: "absolute",
                 marginTop: "-70px",
                 backgroundColor: "white",
                 padding: "10px",
                 justifyContent: "space-between",
+                alignItems: "flex-start",
               }}
             >
               <User
-                avatar={blog && blog.owner.avatar.url}
-                userId={blog && blog.owner._id}
-                name={blog && blog.owner.name}
+                avatar={singleBlog && singleBlog.owner.avatar.url}
+                userId={singleBlog && singleBlog.owner._id}
+                name={singleBlog && singleBlog.owner.name}
               />
             </div>
             {isValid ? (
-              <Link to={`/blog/${id}/edit`}>
-                <FaEdit fontSize={30} />{" "}
-              </Link>
+              <div>
+                <Link to={`/blog/${id}/edit`}>
+                  <FaEdit fontSize={30} />{" "}
+                </Link>
+                <Button
+                  style={{
+                    backgroundColor: "transparent",
+                  }}
+                  onClick={() => {
+                    setLiked(!liked)
+                  }}
+                >
+                  {liked ? (
+                    <FavoriteIcon color="error" />
+                  ) : (
+                    <FavoriteBorderIcon />
+                  )}
+                </Button>
+                <div>{singleBlog.likes.length}</div>
+              </div>
             ) : null}
           </div>
           <Typography
@@ -95,17 +150,134 @@ const SingleBlog = () => {
             position={"relative"}
             zIndex={10}
           >
-            {blog && blog.title}
+            {singleBlog && singleBlog.title}
           </Typography>
+
           <Typography
             maxWidth={"60%"}
             marginTop={"20px"}
             position={"relative"}
             zIndex={10}
             variant="body1"
+            whiteSpace={"pre-line"}
           >
-            {blog && blog.description}
+            {singleBlog && (
+              <div
+                dangerouslySetInnerHTML={{ __html: singleBlog.description }}
+              ></div>
+            )}
           </Typography>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              flexDirection: "column",
+              width: "40%",
+              gap: "20px",
+              marginTop: "20px",
+            }}
+          >
+            <Typography variant="h6">
+              comments ({singleBlog && singleBlog.comments.length})
+            </Typography>
+            {/* <CommentCard /> */}
+            <div>
+              <div style={{ padding: "5px" }}>
+                {singleBlog &&
+                singleBlog.comments &&
+                singleBlog.comments.length > 0 ? (
+                  <div>
+                    {singleBlog.comments.map((item, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          marginBottom: "10px",
+                          padding: "5px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "20px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "10px",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <User
+                            avatar={
+                              item.user &&
+                              item.user.avatar &&
+                              item.user.avatar.url
+                            }
+                            name={item.user && item.user.name}
+                            userId={item.user._id}
+                            date={item && item.updatedAt}
+                          />
+                          <div>
+                            {(user && item.user._id == user._id) || isValid ? (
+                              <Button
+                                variant="text"
+                                color="inherit"
+                                onClick={() => {
+                                  dispatch(deleteComment(id, item._id))
+                                }}
+                              >
+                                <DeleteIcon />
+                              </Button>
+                            ) : null}
+                          </div>
+                        </div>
+
+                        <Typography
+                          variant="body2"
+                          style={{ whiteSpace: "pre-line" }}
+                        >
+                          {item.comment}
+                        </Typography>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div>No revies yet</div>
+                )}
+              </div>
+              <div>
+                {isAuthenticated && (
+                  <form
+                    // onSubmit={handleformsubmit}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "min-contant",
+                    }}
+                  >
+                    <textarea
+                      name="comment"
+                      id="comment"
+                      cols="70"
+                      rows="15"
+                      placeholder="add your review"
+                      style={{ paddingLeft: "10px" }}
+                      onChange={(e) => setComment(e.target.value)}
+                    ></textarea>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      style={{ width: "40%", marginTop: "20px" }}
+                      // type="submit"
+                      disabled={loading}
+                      onClick={handleformsubmit}
+                    >
+                      write
+                    </Button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

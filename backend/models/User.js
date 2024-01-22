@@ -38,14 +38,16 @@ userSchema.pre("save", async function (next) {
   }
   try {
     const soltround = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, soltround)
+    this.password = bcrypt.hash(this.password, soltround)
   } catch (error) {
     next(error)
   }
 })
 
 userSchema.methods.generateToken = function () {
-  return jwt.sign({ _id: this._id }, process.env.SECRETE_JWT_TOKEN)
+  return jwt.sign({ _id: this._id }, process.env.SECRETE_JWT_TOKEN, {
+    expiresIn: "7d",
+  })
 }
 userSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password)
