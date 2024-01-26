@@ -35,16 +35,21 @@ const Blog = ({
 
   return (
     <div className=" flex ">
-      <Container maxWidth="sm">
-        <Card sx={{ maxWidth: 400, maxHeight: 500, minWidth: 300 }}>
+      <Container
+        maxWidth="sm"
+        className=" border max-h-[600px] min-h-[500px] sm:w-full"
+      >
+        <Card
+          sx={{ maxWidth: 400, maxHeight: 500, minWidth: 300, minHeight: 400 }}
+          className=" border border-red-300 min-h-[400px] max-h-[300px] shadow-2xl"
+        >
           <CardActionArea>
             <Link to={`/blog/${blogId}`}>
               <CardMedia
                 component="img"
-                height="200"
                 image={image}
                 alt="green iguana"
-                className="avatar"
+                className="avatar object-contain max-h-[200px]"
                 style={{ opacity: 0.9 }}
               />
             </Link>
@@ -74,20 +79,9 @@ const Blog = ({
                   variant="h6"
                   component="div"
                   marginTop={"10px"}
-                  className="cart-title"
+                  className=" text-xl"
                 >
-                  <div dangerouslySetInnerHTML={{ __html: title }}></div>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  height="80px"
-                  position={"relative"}
-                  overflow={"hidden"}
-                  style={{ whiteSpace: "pre-line" }}
-                >
-                  <div dangerouslySetInnerHTML={{ __html: description }}></div>
-                  {/* {(description.length / 1000).toFixed(2)} */}
+                  {title}
                 </Typography>
               </div>
             </CardContent>

@@ -9,6 +9,8 @@ const singleBlogInitialState = {
   singleBlog: null,
   error: null,
   message: null,
+  likedmessage: null,
+  likedError: null,
 }
 export const blogSlice = createSlice({
   name: "blogSlice",
@@ -62,18 +64,21 @@ export const singleBlogSlice = createSlice({
     },
     likeblogSuccess: (state, action) => {
       state.loading = false
-      state.message = action.payload
+      state.likedmessage = action.payload
     },
     likeblogFailure: (state, action) => {
       state.loading = false
-      state.error = action.payload
+      state.likedError = action.payload
     },
     addCommentblogRequest: (state) => {
       state.loading = true
     },
     addCommentblogSuccess: (state, action) => {
+      // console.log("reducer starts : ")
       state.loading = false
       state.message = action.payload
+      // console.log("action: " + action.payload)
+      // console.log("state : " + state.message)
     },
     addCommentblogFailure: (state, action) => {
       state.loading = false
@@ -94,6 +99,10 @@ export const singleBlogSlice = createSlice({
     singleBlogError: (state) => {
       state.error = null
     },
+    messagenull: (state) => {
+      state.message = null
+      state.likedmessage = null
+    },
   },
 })
 
@@ -108,12 +117,13 @@ export const {
   likeblogRequest,
   likeblogSuccess,
   likeblogFailure,
+  addCommentblogFailure,
   addCommentblogRequest,
   addCommentblogSuccess,
-  addCommentblogFailure,
   deletCommentblogRequest,
   deletCommentblogSuccess,
   deleteCommentblogFailure,
+  messagenull,
 } = singleBlogSlice.actions
 
 export const editBlogSlice = createSlice({
@@ -136,6 +146,33 @@ export const editBlogSlice = createSlice({
     },
   },
 })
+
+// export const editCommentSlice = createSlice({
+//   name: "editCommentSlice",
+//   initialState: singleBlogInitialState,
+//   reducers: {
+//     addCommentblogRequest: (state) => {
+//       state.loading = true
+//     },
+//     addCommentblogSuccess: (state, action) => {
+//       console.log("reducer starts : ")
+//       state.loading = false
+//       state.message = action.payload
+//       console.log("action: " + action.payload)
+//       console.log("state : " + state.message)
+//     },
+//     addCommentblogFailure: (state, action) => {
+//       state.loading = false
+//       state.error = action.payload
+//     },
+//   },
+// })
+
+// export const {
+//   addCommentblogRequest,
+//   addCommentblogSuccess,
+//   addCommentblogFailure,
+// } = editCommentSlice.actions
 
 export const { blogRequest, blogSuccess, blogFailure, clearError } =
   blogSlice.actions

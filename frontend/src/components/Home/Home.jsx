@@ -21,44 +21,42 @@ const Home = () => {
   // console.log(blogs)
   return (
     <div>
-      <Container
-        maxWidth="lg"
-        sx={{ height: "40vh" }}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="h2">Our Fresh Blogs</Typography>
-        <Typography
-          variant="body1"
-          textAlign={"center"}
-          marginTop={"30px"}
-        >
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum
-          doloremque maiores accusantium dolorem dicta cupiditate eligendi nulla
-          dolorum et rerum. Lorem ipsum dolor,usantium dolorem dicta cupiditate
-          eligendi nulla dolorum et rerum.
-        </Typography>
+      <Container className=" border text-center mb-2 md:h-[40vh] items-center flex flex-col">
+        <div>
+          <Typography variant="h2">Our Fresh Blogs</Typography>
+          <Typography
+            variant="body1"
+            textAlign={"center"}
+            marginTop={"30px"}
+          >
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum
+            doloremque maiores accusantium dolorem dicta cupiditate eligendi
+            nulla dolorum et rerum. Lorem ipsum dolor,usantium dolorem dicta
+            cupiditate eligendi nulla dolorum et rerum.
+          </Typography>
+        </div>
       </Container>
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        className="mt-4 border"
+      >
         {loading !== null ? (
           <Box sx={{ flexGrow: 1 }}>
             <Grid
               container
-              spacing={{ xs: 2, md: 6 }}
-              columns={{ xs: 1, sm: 8, md: 12 }}
+              spacing={{ xs: 0, md: 6 }}
+              columns={{ xs: 1, sm: 2, md: 12 }}
+              className=" "
             >
               {blogs &&
                 blogs.map((blog) => (
                   <Grid
                     item
                     xs={1}
-                    sm={4}
+                    sm={1}
                     md={4}
                     key={blog._id}
+                    className=" "
                   >
                     <Blog
                       blogId={blog._id}

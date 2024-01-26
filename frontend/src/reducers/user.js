@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   editloading: false,
   message: null,
+  editusermessage: null,
 }
 const userBloginitialState = {
   loading: false,
@@ -113,11 +114,15 @@ export const userSlice = createSlice({
     },
     edituserProfileSuccess: (state, action) => {
       state.loading = false
-      state.message = action.payload
+      state.editusermessage = action.payload
     },
     edituserProfileFailure: (state, action) => {
       state.loading = false
       state.error = action.payload
+    },
+    usermessagenull: (state) => {
+      state.message = null
+      state.editusermessage = null
     },
   },
 })
@@ -137,6 +142,7 @@ export const {
   logoutrequest,
   logoutsuccess,
   logoutfailure,
+  usermessagenull,
 } = userSlice.actions
 
 export const userSliceReducer = userSlice.reducer

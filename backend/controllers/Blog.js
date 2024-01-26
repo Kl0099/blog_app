@@ -140,8 +140,8 @@ exports.deleteComment = async (req, res) => {
         success: false,
         message: "not found",
       })
-    // console.log(req.params.id)
-    // console.log(blog.owner == req.user.id)
+    // console.log("param id : ", req.params.id)
+    // console.log("kya blog owner hi user hai : ", blog.owner == req.user.id)
     // console.log(req.body.commentId)
     // console.log(req.user._id)
     // console.log(req.body)
@@ -150,7 +150,7 @@ exports.deleteComment = async (req, res) => {
 
     if (blog.owner == req.user.id) {
       blog.comments.forEach((item, index) => {
-        if (item._id == req.body.commentId) {
+        if (item._id.toString() == req.body.commentId.toString()) {
           blog.comments.splice(index, 1)
         }
       })
@@ -161,7 +161,9 @@ exports.deleteComment = async (req, res) => {
       })
     } else {
       blog.comments.forEach((item, index) => {
-        if (item.user == req.user._id) {
+        // console.log(item.user.toString() == req.user._id.toString())
+        // console.log(req.user._id)
+        if (item.user.toString() == req.user._id.toString()) {
           blog.comments.splice(index, 1)
         }
       })

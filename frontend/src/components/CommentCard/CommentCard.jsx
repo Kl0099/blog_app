@@ -25,6 +25,7 @@ const CommentCard = () => {
     e.preventDefault()
     dispatch(commentaddandupdate(id, comment))
   }
+
   // useEffect(() => {
   //   dispatch(getSingleBlog(id))
   // }, [dispatch])
@@ -84,6 +85,7 @@ const CommentCard = () => {
                             color="inherit"
                             onClick={() => {
                               dispatch(deleteComment(id, item._id))
+                              dispatch(getSingleBlog(id))
                             }}
                           >
                             <DeleteIcon />

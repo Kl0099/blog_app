@@ -15,6 +15,9 @@ import {
   editblogFailure,
   editblogRequest,
   editblogSuccess,
+  likeblogFailure,
+  likeblogRequest,
+  likeblogSuccess,
   singleblogFailure,
   singleblogRequest,
   singleblogSuccess,
@@ -110,6 +113,7 @@ export const commentaddandupdate = (id, comment) => async (dispatch) => {
       }
     )
     dispatch(addCommentblogSuccess(data.message))
+    console.log("action file :" + data.message)
   } catch (error) {
     console.log(error)
     dispatch(addCommentblogFailure(error.response.data.message))
@@ -133,5 +137,23 @@ export const deleteComment = (id, commentId) => async (dispatch) => {
   } catch (error) {
     console.log("action folder : ", error)
     dispatch(deleteCommentblogFailure(error.response.data.message))
+  }
+}
+export const likedAnsDisliked = (id) => async (dispatch) => {
+  try {
+    dispatch(likeblogRequest())
+    const { data } = await axios.get(
+      `http://localhost:4000/api/v1/Blog/${id}`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    dispatch(likeblogSuccess(data.message))
+  } catch (error) {
+    console.log("like error ", error)
+    dispatch(likeblogFailure(error.response.data.message))
   }
 }

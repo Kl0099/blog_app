@@ -21,9 +21,14 @@ const UserProfile = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
 
-  const { editloading, loading, user, isAuthenticated, message } = useSelector(
-    (state) => state.user
-  )
+  const {
+    editloading,
+    loading,
+    user,
+    isAuthenticated,
+    message,
+    editusermessage,
+  } = useSelector((state) => state.user)
 
   const [toggle, setToggle] = useState(false)
   const [email, setEmail] = useState("")
@@ -39,19 +44,19 @@ const UserProfile = () => {
   }
   useEffect(() => {
     dispatch(getUser(id))
-  }, [id, dispatch])
+  }, [])
   const { loading: getuserloading, userBlogs: getuser } = useSelector(
     (state) => state.getuser
   )
   // console.log(getuser)
   useEffect(() => {
-    if (message) {
+    if (editusermessage) {
       setEditLoad(!editload)
       setToggle(!toggle)
-      dispatch(loaduser())
-      console.log(message)
+      dispatch(getUser(id))
+      console.log(editusermessage)
     }
-  }, [message])
+  }, [editusermessage])
   useEffect(() => {
     if (user) {
       setEmail(user.email)

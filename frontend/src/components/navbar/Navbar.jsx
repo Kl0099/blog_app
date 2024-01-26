@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { Container, Button, Avatar } from "@mui/material"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import Typography from "@mui/material/Typography"
@@ -8,9 +8,13 @@ import "./navbar.css"
 import "../../App.css"
 import Loader from "../Loader/Loader"
 import User from "../User/User"
+import { getUser, loaduser } from "../../actions/user"
+import { usermessagenull } from "../../reducers/user"
 
 const Navbar = () => {
-  const { isAuthenticated, user, loading } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+  const { isAuthenticated, user, loading, message, editusermessage } =
+    useSelector((state) => state.user)
   const LinkStyle = {
     textDecoration: "none",
     color: "black",
@@ -20,6 +24,12 @@ const Navbar = () => {
     borderRadius: "20px",
   }
   // console.log(user)
+  useEffect(() => {
+    if (editusermessage) {
+      dispatch(loaduser())
+      dispatch(usermessagenull())
+    }
+  }, [editusermessage])
   return (
     <div>
       {loading ? (
@@ -28,10 +38,14 @@ const Navbar = () => {
         <div className="navbar">
           <div className="logo">
             <Avatar
-              src={
-                "https://logos.flamingtext.com/Word-Logos/blog-design-sketch-name.png"
-              }
-              style={{ width: "150px", height: "150px" }}
+              src="https://logos.flamingtext.com/Word-Logos/blog-design-sketch-name.png"
+              style={{
+                width: "90px",
+                height: "90px",
+                // border: "1px solid black",
+                objectFit: "cover",
+                background: "white",
+              }}
             />
           </div>
           <div
@@ -70,17 +84,6 @@ const Navbar = () => {
                     to={"/newBlog"}
                   >
                     New Blog
-                  </Link>
-                </li>
-              )}
-
-              {isAuthenticated && (
-                <li style={{ fontSize: "22px", textDecoration: "none" }}>
-                  <Link
-                    to={"/logout"}
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    Logout
                   </Link>
                 </li>
               )}

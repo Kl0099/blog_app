@@ -10,6 +10,7 @@ import {
   commentaddandupdate,
   deleteComment,
   getSingleBlog,
+  likedAnsDisliked,
 } from "../../actions/blog"
 import "react-quill/dist/quill.snow.css" // Import the styles
 import ReactQuill, { Quill } from "react-quill"
@@ -18,165 +19,167 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import CommentCard from "../commentcard/commentcard"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
+import { messagenull } from "../../reducers/blog"
+import { useAlert } from "react-alert"
+// import ThumbUpIcon from "@material-ui/icons/ThumbUp"
+// import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined"
 
 const SingleBlog = () => {
   const { id } = useParams()
+  const alert = useAlert()
   // console.log(id)
 
   const [comment, setComment] = useState("")
   const [blog, setBlog] = useState(null)
   const [liked, setLiked] = useState(false)
   const dispatch = useDispatch()
-  const handleformsubmit = (e) => {
-    e.preventDefault()
-    console.log("comment", comment)
-    dispatch(commentaddandupdate(id, comment))
-  }
+
   useEffect(() => {
     dispatch(getSingleBlog(id))
     // console.log("single blog")
-  }, [dispatch])
-  const { loading, singleBlog, message, error } = useSelector(
+  }, [dispatch, id])
+  const { loading, singleBlog, message, error, likedmessage } = useSelector(
     (state) => state.singleBlog
   )
   // console.log(singleBlog)
+  // console.log("message : " + likedmessage)
   const { isAuthenticated, user } = useSelector((state) => state.user)
-  // console.log(singleBlog)
-  // useEffect(() => {
-  //   setBlog(singleBlog)
-  // }, [singleBlog])
-  // console.log(liked)
-  // const fetchData = async () => {
-  //   // Now, you can safely work with the blogs
-  //   let blog = blogs.map((blog) => {
-  //     if (blog._id === id) {
-  //       return blog
-  //     }
-  //     return null
-  //   })
 
-  //   // Filter out null values from the map result
-  //   blog = blog.filter((item) => item !== null)
-  //   setBlog(blog[0])
-  //   console.log(blog)
-  // }
   const handlelike = () => {
     setLiked(!liked)
-    console.log(liked)
+    dispatch(likedAnsDisliked(id))
+    // console.log("value of like :" + liked)
   }
   const isValid =
     singleBlog && isAuthenticated === true && singleBlog.owner._id === user._id
+  const handleformsubmit = (e) => {
+    e.preventDefault()
+    // console.log("comment", comment)
+    dispatch(commentaddandupdate(id, comment))
+  }
 
   useEffect(() => {
+    if (likedmessage) {
+      dispatch(getSingleBlog(id))
+      // dispatch(loaduser())
+      // window.location.reload()
+      // console.log("singlebog message : ", message)
+      alert.success(likedmessage)
+      dispatch(messagenull())
+    }
     if (message) {
       dispatch(getSingleBlog(id))
       // dispatch(loaduser())
       // window.location.reload()
-      console.log("singlebog message : ", message)
+      // console.log("singlebog message : ", message)
+      alert.success(message)
+      dispatch(messagenull())
     }
     if (error) {
       console.log("comment card useeffect error: " + error)
     }
-  }, [message, id, dispatch, error])
+  }, [message, likedmessage, error])
+  useEffect(() => {
+    setLiked(false)
+    singleBlog &&
+      user &&
+      singleBlog.likes &&
+      singleBlog.likes.forEach((item) => {
+        if (item._id.toString() == user._id.toString()) {
+          setLiked(true)
+          // console.log("useEffect liked:" + liked)
+        }
+      })
+  }, [singleBlog, user])
 
   return (
     <div>
       {loading ? (
         <div>loading...</div>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ width: "100%", position: "relative" }}>
+        <div className=" flex flex-col items-center">
+          <div className=" w-full relative">
             <img
               width="100%"
               height="600px"
               src={singleBlog && singleBlog.image.url}
-              style={{
-                objectFit: "cover",
-                borderRadius: "20px",
-                position: "relative",
-              }}
+              className=" object-cover relative w-full h-[600px]"
             />
-            <div
-              style={{
-                display: "flex",
-                gap: "20px",
-                position: "absolute",
-                marginTop: "-70px",
-                backgroundColor: "white",
-                padding: "10px",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-              }}
-            >
-              <User
-                avatar={singleBlog && singleBlog.owner.avatar.url}
-                userId={singleBlog && singleBlog.owner._id}
-                name={singleBlog && singleBlog.owner.name}
-              />
-            </div>
-            {isValid ? (
-              <div>
-                <Link to={`/blog/${id}/edit`}>
-                  <FaEdit fontSize={30} />{" "}
-                </Link>
-                <Button
-                  style={{
-                    backgroundColor: "transparent",
-                  }}
-                  onClick={() => {
-                    setLiked(!liked)
-                  }}
-                >
-                  {liked ? (
-                    <FavoriteIcon color="error" />
-                  ) : (
-                    <FavoriteBorderIcon />
-                  )}
-                </Button>
-                <div>{singleBlog.likes.length}</div>
-              </div>
-            ) : null}
           </div>
-          <Typography
-            gutterBottom
-            variant="h3"
-            component="div"
-            position={"relative"}
-            zIndex={10}
-          >
-            {singleBlog && singleBlog.title}
-          </Typography>
+          <div className=" flex bg-white p-2 justify-between items-center relative">
+            <div className=" mb-20 shadow-lg min-w-[80%] relative mt-[-60px] bg-white ml-5 py-5 px-5  ">
+              <Typography
+                gutterBottom
+                variant="h4"
+                component="div"
+                position={"relative"}
+                zIndex={10}
+              >
+                {singleBlog && singleBlog.title}
+              </Typography>
+              <div className=" flex gap-8 items-center">
+                <User
+                  avatar={singleBlog && singleBlog.owner.avatar.url}
+                  userId={singleBlog && singleBlog.owner._id}
+                  name={singleBlog && singleBlog.owner.name}
+                />
+                <div>
+                  <div className=" flex gap-3 items-center">
+                    {isAuthenticated && (
+                      <div className=" flex flex-col items-center gap-1 ">
+                        <Button
+                          className=" bg-transparent w-3 flex gap-1 mx-5"
+                          onClick={handlelike}
+                        >
+                          {singleBlog && user && liked ? (
+                            <FavoriteIcon color="error" />
+                          ) : (
+                            <FavoriteBorderIcon color="warning" />
+                          )}
+                          <div className=" flex gap-1 items-center">
+                            {singleBlog &&
+                              singleBlog.likes &&
+                              singleBlog.likes.length}{" "}
+                            <span className=" text-black text-sm"> Like</span>
+                          </div>
+                        </Button>
+                        {/* <div>{liked.toString()}</div> */}
+                      </div>
+                    )}
+                    <Typography variant="body2">
+                      {singleBlog &&
+                        new Date(singleBlog.updatedAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
+                    </Typography>
+                    <div>
+                      {isValid ? (
+                        <div className=" flex g-3 items-center ml-5">
+                          <Link to={`/blog/${id}/edit`}>
+                            <FaEdit fontSize={30} />{" "}
+                          </Link>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <Typography
-            maxWidth={"60%"}
-            marginTop={"20px"}
-            position={"relative"}
-            zIndex={10}
-            variant="body1"
-            whiteSpace={"pre-line"}
-          >
-            {singleBlog && (
-              <div
-                dangerouslySetInnerHTML={{ __html: singleBlog.description }}
-              ></div>
-            )}
-          </Typography>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              flexDirection: "column",
-              width: "40%",
-              gap: "20px",
-              marginTop: "20px",
-            }}
-          >
+          {singleBlog && (
+            <Typography
+              className=" prose min-w-[70%] z-10 relative"
+              dangerouslySetInnerHTML={{ __html: singleBlog.description }}
+            ></Typography>
+          )}
+
+          <div className=" flex items-start flex-col w-[60%] gap-5 mt-5">
             <Typography variant="h6">
               comments ({singleBlog && singleBlog.comments.length})
             </Typography>
@@ -190,22 +193,9 @@ const SingleBlog = () => {
                     {singleBlog.comments.map((item, index) => (
                       <div
                         key={index}
-                        style={{
-                          marginBottom: "10px",
-                          padding: "5px",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "20px",
-                        }}
+                        className=" mb-5 p-1 flex flex-col gap-5"
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "10px",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
+                        <div className=" flex justify-between items-center gap-3">
                           <User
                             avatar={
                               item.user &&
@@ -247,29 +237,24 @@ const SingleBlog = () => {
               <div>
                 {isAuthenticated && (
                   <form
-                    // onSubmit={handleformsubmit}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "min-contant",
-                    }}
+                    onSubmit={handleformsubmit}
+                    className=" flex flex-col w-[60%] mb-5"
                   >
                     <textarea
                       name="comment"
                       id="comment"
                       cols="70"
-                      rows="15"
+                      rows="8"
                       placeholder="add your review"
-                      style={{ paddingLeft: "10px" }}
                       onChange={(e) => setComment(e.target.value)}
+                      className=" rounded-sm border-slate-700 p-2 border border-solid  mb-2"
                     ></textarea>
                     <Button
                       variant="contained"
                       color="secondary"
-                      style={{ width: "40%", marginTop: "20px" }}
-                      // type="submit"
+                      type="submit"
                       disabled={loading}
-                      onClick={handleformsubmit}
+                      className=" w-[60%] mt-5 m-5"
                     >
                       write
                     </Button>

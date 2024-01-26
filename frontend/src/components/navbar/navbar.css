@@ -6,7 +6,8 @@
   /* background-color: #333; */
   /* color: white; */
   padding: 10px;
-  min-height: 90px;
+  /* min-height: 70px; */
+  /* border: 1px solid black !important; */
 }
 @media screen and (max-width: 566px) {
   .navbar {
