@@ -241,12 +241,14 @@ exports.updateBlog = async (req, res) => {
 }
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blog = await Blog.find()
+    let blog = await Blog.find()
       .populate("likes")
       .populate("owner")
       .populate("title")
       .populate("comments")
-    const allBlogs = []
+      .sort({ date: -1 })
+    blog = blog.reverse()
+    // console.log(blog)
     if (!blog)
       return res.status(404).json({
         success: false,

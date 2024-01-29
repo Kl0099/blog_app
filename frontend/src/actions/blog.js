@@ -11,13 +11,17 @@ import {
   createblogSuccess,
   deletCommentblogRequest,
   deletCommentblogSuccess,
+  deletblogRequest,
+  deletblogSuccess,
   deleteCommentblogFailure,
+  deleteblogFailure,
   editblogFailure,
   editblogRequest,
   editblogSuccess,
   likeblogFailure,
   likeblogRequest,
   likeblogSuccess,
+  setmessage,
   singleblogFailure,
   singleblogRequest,
   singleblogSuccess,
@@ -94,6 +98,7 @@ export const createBlog = (title, description, image) => async (dispatch) => {
       }
     )
     dispatch(createblogSuccess(data.blog))
+    dispatch(setmessage(data.message))
   } catch (error) {
     console.log(error)
     dispatch(createblogFailure(error.response.data.message))
@@ -155,5 +160,23 @@ export const likedAnsDisliked = (id) => async (dispatch) => {
   } catch (error) {
     console.log("like error ", error)
     dispatch(likeblogFailure(error.response.data.message))
+  }
+}
+export const deleteBlog = (id) => async (dispatch) => {
+  try {
+    dispatch(deletblogRequest())
+    const { data } = await axios.delete(
+      `http://localhost:4000/api/v1/Blog/${id}`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    dispatch(deletblogSuccess(data.message))
+  } catch (error) {
+    console.log("deleteblog error ", error)
+    dispatch(deleteblogFailure(error.response.data.message))
   }
 }

@@ -11,7 +11,9 @@
 }
 @media screen and (max-width: 566px) {
   .navbar {
-    visibility: hidden;
+    /* visibility: hidden;
+     */
+    display: none;
   }
 }
 

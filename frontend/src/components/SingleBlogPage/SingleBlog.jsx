@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import { Typography, Button } from "@mui/material"
 import Avatar from "@mui/material/Avatar"
 import { Container, Box } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import User from "../User/User"
 import { FaEdit } from "react-icons/fa"
+import { FaComment } from "react-icons/fa"
 import {
   commentaddandupdate,
+  deleteBlog,
   deleteComment,
   getSingleBlog,
   likedAnsDisliked,
@@ -27,6 +29,7 @@ import { useAlert } from "react-alert"
 const SingleBlog = () => {
   const { id } = useParams()
   const alert = useAlert()
+  const navigate = useNavigate()
   // console.log(id)
 
   const [comment, setComment] = useState("")
@@ -38,9 +41,15 @@ const SingleBlog = () => {
     dispatch(getSingleBlog(id))
     // console.log("single blog")
   }, [dispatch, id])
-  const { loading, singleBlog, message, error, likedmessage } = useSelector(
-    (state) => state.singleBlog
-  )
+  const {
+    deleteblogmessage,
+    loading,
+    singleBlog,
+    message,
+    error,
+    likedmessage,
+  } = useSelector((state) => state.singleBlog)
+  const [commentloading, setCommetLoading] = useState(false)
   // console.log(singleBlog)
   // console.log("message : " + likedmessage)
   const { isAuthenticated, user } = useSelector((state) => state.user)
@@ -56,6 +65,10 @@ const SingleBlog = () => {
     e.preventDefault()
     // console.log("comment", comment)
     dispatch(commentaddandupdate(id, comment))
+    setCommetLoading(!commentloading)
+  }
+  const deletebloghandler = () => {
+    dispatch(deleteBlog(id))
   }
 
   useEffect(() => {
@@ -68,17 +81,21 @@ const SingleBlog = () => {
       dispatch(messagenull())
     }
     if (message) {
+      setCommetLoading(!commentloading)
       dispatch(getSingleBlog(id))
-      // dispatch(loaduser())
-      // window.location.reload()
-      // console.log("singlebog message : ", message)
+      // console.log(singleBlog)
       alert.success(message)
       dispatch(messagenull())
+    }
+    if (deleteblogmessage) {
+      alert.success(deleteblogmessage)
+      dispatch(messagenull())
+      navigate("/")
     }
     if (error) {
       console.log("comment card useeffect error: " + error)
     }
-  }, [message, likedmessage, error])
+  }, [message, likedmessage, deleteblogmessage, error])
   useEffect(() => {
     setLiked(false)
     singleBlog &&
@@ -97,7 +114,7 @@ const SingleBlog = () => {
       {loading ? (
         <div>loading...</div>
       ) : (
-        <div className=" flex flex-col items-center">
+        <div className=" flex flex-col items-center border sm:w-full">
           <div className=" w-full relative">
             <img
               width="100%"
@@ -106,27 +123,58 @@ const SingleBlog = () => {
               className=" object-cover relative w-full h-[600px]"
             />
           </div>
-          <div className=" flex bg-white p-2 justify-between items-center relative">
-            <div className=" mb-20 shadow-lg min-w-[80%] relative mt-[-60px] bg-white ml-5 py-5 px-5  ">
+          <div className=" w-full flex bg-white p-2 justify-between items-center relative">
+            <div className=" mb-20 shadow-lg min-w-[80%] relative mt-[-60px] bg-white ml-5 py-5 px-5 sm:w-full md:w-[60%] sm:text-xl">
               <Typography
-                gutterBottom
-                variant="h4"
-                component="div"
-                position={"relative"}
-                zIndex={10}
+                variant="h5"
+                className=" font-small relative z-10 text-2xl sm:w-full sm:text-xl"
               >
                 {singleBlog && singleBlog.title}
               </Typography>
-              <div className=" flex gap-8 items-center">
+              <div className=" sm:flex md:flex sm:p-3 gap-8 items-center mt-5 flex-wrap mb-3">
                 <User
                   avatar={singleBlog && singleBlog.owner.avatar.url}
                   userId={singleBlog && singleBlog.owner._id}
                   name={singleBlog && singleBlog.owner.name}
                 />
+                {/* <Typography
+                  variant="body2"
+                  className="flex md:hidden mt-3"
+                >
+                  {singleBlog &&
+                    new Date(singleBlog.updatedAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                </Typography> */}
                 <div>
-                  <div className=" flex gap-3 items-center">
+                  <div className="flex gap-3 items-center flex-wrap md:justify-center ">
+                    <Typography
+                      variant="body2"
+                      className="  md:flex"
+                    >
+                      {singleBlog &&
+                        new Date(singleBlog.updatedAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "2-digit",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
+                    </Typography>
+                    <Button className=" bg-transparent w-3 flex gap-4 mx-5">
+                      <FaComment className="text-2xl" />
+
+                      <span>
+                        {singleBlog &&
+                          singleBlog.comments &&
+                          singleBlog.comments.length}
+                      </span>
+                    </Button>
                     {isAuthenticated && (
-                      <div className=" flex flex-col items-center gap-1 ">
+                      <div className=" flex flex-col items-center gap-1 ml-3 ">
                         <Button
                           className=" bg-transparent w-3 flex gap-1 mx-5"
                           onClick={handlelike}
@@ -146,23 +194,21 @@ const SingleBlog = () => {
                         {/* <div>{liked.toString()}</div> */}
                       </div>
                     )}
-                    <Typography variant="body2">
-                      {singleBlog &&
-                        new Date(singleBlog.updatedAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          }
-                        )}
-                    </Typography>
+
                     <div>
                       {isValid ? (
                         <div className=" flex g-3 items-center ml-5">
                           <Link to={`/blog/${id}/edit`}>
                             <FaEdit fontSize={30} />{" "}
                           </Link>
+                          <div>
+                            <Button
+                              className=" bg-transparent bg-black"
+                              onClick={deletebloghandler}
+                            >
+                              <DeleteIcon color="error" />{" "}
+                            </Button>
+                          </div>
                         </div>
                       ) : null}
                     </div>
@@ -174,12 +220,12 @@ const SingleBlog = () => {
 
           {singleBlog && (
             <Typography
-              className=" prose min-w-[70%] z-10 relative"
+              className="  prose min-w-[70%] z-10 relative"
               dangerouslySetInnerHTML={{ __html: singleBlog.description }}
             ></Typography>
           )}
 
-          <div className=" flex items-start flex-col w-[60%] gap-5 mt-5">
+          <div className=" flex items-start flex-col w-[60%] gap-5 mt-5 ">
             <Typography variant="h6">
               comments ({singleBlog && singleBlog.comments.length})
             </Typography>
@@ -195,7 +241,7 @@ const SingleBlog = () => {
                         key={index}
                         className=" mb-5 p-1 flex flex-col gap-5"
                       >
-                        <div className=" flex justify-between items-center gap-3">
+                        <div className="  flex justify-between items-center gap-3 w-fit">
                           <User
                             avatar={
                               item.user &&
@@ -238,23 +284,23 @@ const SingleBlog = () => {
                 {isAuthenticated && (
                   <form
                     onSubmit={handleformsubmit}
-                    className=" flex flex-col w-[60%] mb-5"
+                    className=" flex flex-col w-full mb-5"
                   >
                     <textarea
                       name="comment"
                       id="comment"
-                      cols="70"
-                      rows="8"
+                      // cols="70"
+                      // rows="8"
                       placeholder="add your review"
                       onChange={(e) => setComment(e.target.value)}
-                      className=" rounded-sm border-slate-700 p-2 border border-solid  mb-2"
+                      className="w-full h-[200px] rounded-sm border-slate-700 p-2  border-solid  mb-2"
                     ></textarea>
                     <Button
                       variant="contained"
                       color="secondary"
                       type="submit"
-                      disabled={loading}
-                      className=" w-[60%] mt-5 m-5"
+                      disabled={commentloading}
+                      className=" w-[100px] mt-5 m-5"
                     >
                       write
                     </Button>

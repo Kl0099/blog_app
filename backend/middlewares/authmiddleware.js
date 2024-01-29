@@ -1,16 +1,14 @@
 const User = require("../models/User")
 const JWT = require("jsonwebtoken")
-require("dotenv")
+require("dotenv").config()
+// const session = require("express-session")
 
 exports.isAuthenticated = async (req, res, next) => {
   try {
     const { token } = req.cookies
-    // const ans = localStorage.getItem("cookie")/
-    // console.log(jwt)
+
     // console.log(req.cookies)
-    // console.log(req.headers.cookie)
-    // console.log(JWT.decode(token))
-    // console.log(process.env.SECRETE_JWT_TOKEN)
+
     if (!token) {
       return res.status(401).json({
         success: false,

@@ -1,12 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
   isAuthenticated: false,
-  user: null,
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null,
   error: null,
   loading: false,
   editloading: false,
   message: null,
   editusermessage: null,
+  token: localStorage.getItem("token")
+    ? JSON.stringify(localStorage.getItem("token"))
+    : null,
 }
 const userBloginitialState = {
   loading: false,
@@ -75,6 +80,7 @@ export const userSlice = createSlice({
       state.user = null
       state.isAuthenticated = false
       state.message = action.payload
+      state.token = null
     },
     logoutfailure: (state, action) => {
       state.loading = false
@@ -124,6 +130,9 @@ export const userSlice = createSlice({
       state.message = null
       state.editusermessage = null
     },
+    setToken: (state, action) => {
+      state.token = action.payload
+    },
   },
 })
 export const {
@@ -143,6 +152,7 @@ export const {
   logoutsuccess,
   logoutfailure,
   usermessagenull,
+  setToken,
 } = userSlice.actions
 
 export const userSliceReducer = userSlice.reducer

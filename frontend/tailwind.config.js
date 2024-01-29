@@ -9,8 +9,12 @@ export default {
     extend: {
       fontSize: {
         "2xl": "1.5rem", // Adjust the font size as needed
-        "3xl": "1.875rem", // Adjust the font size as needed
+        "3xl": "1.875rem",
+        xs: "0.75rem", // Adjust the font size as needed
         // Add more sizes as needed
+      },
+      screens: {
+        sm: "640px",
       },
     },
   },

@@ -15,15 +15,20 @@ const Home = () => {
     dispatch(getAllblogs())
 
     console.log("home page ")
-  }, [])
+  }, [dispatch])
   const { loading, blogs } = useSelector((state) => state.blogs)
   // console.log(loading)
   // console.log(blogs)
   return (
-    <div>
-      <Container className=" border text-center mb-2 md:h-[40vh] items-center flex flex-col">
-        <div>
-          <Typography variant="h2">Our Fresh Blogs</Typography>
+    <div className="  min-w-full homeContainer mb-6">
+      {/* <Container className=" border items-center justify-center flex flex-col  text-center mb-2 md:h-[40vh] md:mt-12 sm:w-full sm:text-xl  w-full">
+        <div className=" border mt-12 md:mt-12 flex flex-col items-center justify-center">
+          <Typography
+            variant="h2"
+            className=" mt-5 "
+          >
+            Our Fresh Blogs
+          </Typography>
           <Typography
             variant="body1"
             textAlign={"center"}
@@ -35,16 +40,37 @@ const Home = () => {
             cupiditate eligendi nulla dolorum et rerum.
           </Typography>
         </div>
+      </Container> */}
+      <Container className=" items-center justify-center flex flex-col text-center mb-2  md:mt-12 sm:w-full sm:text-xl w-full md:py-16">
+        <div className=" mt-12 md:mt-12 flex flex-col items-center justify-center">
+          <Typography
+            variant="h2"
+            className="mt-5"
+          >
+            Our Fresh Blogs
+          </Typography>
+          <Typography
+            variant="body1"
+            textAlign="center"
+            marginTop="30px"
+          >
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum
+            doloremque maiores accusantium dolorem dicta cupiditate eligendi
+            nulla dolorum et rerum. Lorem ipsum dolor,usantium dolorem dicta
+            cupiditate eligendi nulla dolorum et rerum.
+          </Typography>
+        </div>
       </Container>
+
       <Container
         maxWidth="xl"
-        className="mt-4 border"
+        className=" "
       >
         {loading !== null ? (
           <Box sx={{ flexGrow: 1 }}>
             <Grid
               container
-              spacing={{ xs: 0, md: 6 }}
+              spacing={{ xs: 1, md: 6 }}
               columns={{ xs: 1, sm: 2, md: 12 }}
               className=" "
             >

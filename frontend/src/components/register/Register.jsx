@@ -37,7 +37,7 @@ const Register = () => {
     }
   }, [isAuthenticated])
   return (
-    <div className="container">
+    <div className=" h-full containerr md:w-full mt-12 sm:w-11/12">
       <div className="container_header">
         <Avatar
           src={
@@ -49,7 +49,7 @@ const Register = () => {
           src={avatar}
           style={{ width: "100px", height: "100px" }}
         />
-        <h1>register page</h1>
+        <h1 className="container_title">register page</h1>
         <form
           encType="multipart/form-data"
           className="container_form"
@@ -66,16 +66,18 @@ const Register = () => {
             className="input"
             type="text"
             placeholder="name"
+            required
             onChange={(e) => {
               setName(e.target.value)
             }}
           ></input>
           <input
             accept="image/*"
-            className="input_file"
+            className="input_file md:w-full"
             type="file"
             name="file"
             id="file"
+            required
             onChange={handleImageChange}
           />
           <input
@@ -83,6 +85,7 @@ const Register = () => {
             value={email}
             type="email"
             placeholder="email"
+            required
             onChange={(e) => {
               setEmail(e.target.value)
             }}
@@ -93,6 +96,7 @@ const Register = () => {
             value={password}
             className="password"
             placeholder="password"
+            required
             onChange={(e) => {
               setPassword(e.target.value)
             }}

@@ -85,7 +85,7 @@ const UserProfile = () => {
       {getuserloading ? (
         <Loader />
       ) : (
-        <div>
+        <div className=" mb-8">
           {getuser && (
             <div>
               <Container>
@@ -188,6 +188,7 @@ const UserProfile = () => {
                     gap: "20px",
                     flexDirection: "column",
                   }}
+                  className=""
                 >
                   <Avatar
                     style={{
@@ -205,8 +206,9 @@ const UserProfile = () => {
                   <input
                     style={{
                       padding: "10px",
-                      borderRadius: "20px",
+                      // borderRadius: "20px",
                       outline: "none",
+                      border: "1px solid rgba(0,0,0,1)",
                     }}
                     type="email"
                     name="email"
@@ -218,8 +220,8 @@ const UserProfile = () => {
                   <input
                     style={{
                       padding: "10px",
-                      borderRadius: "20px",
                       outline: "none",
+                      border: "1px solid rgba(0,0,0,1)",
                     }}
                     type="text"
                     name="name"

@@ -37,11 +37,11 @@ const Blog = ({
     <div className=" flex ">
       <Container
         maxWidth="sm"
-        className=" border max-h-[600px] min-h-[500px] sm:w-full"
+        className="  max-h-[600px]  sm:w-1/2   "
       >
         <Card
-          sx={{ maxWidth: 400, maxHeight: 500, minWidth: 300, minHeight: 400 }}
-          className=" border border-red-300 min-h-[400px] max-h-[300px] shadow-2xl"
+          // sx={{ maxWidth: 400, maxHeight: 500, minWidth: 300, minHeight: 400 }}
+          className=" mt-4 rounded-md min-h-[400px] max-h-[300px] hover:shadow-2xl "
         >
           <CardActionArea>
             <Link to={`/blog/${blogId}`}>
@@ -49,13 +49,13 @@ const Blog = ({
                 component="img"
                 image={image}
                 alt="green iguana"
-                className="avatar object-contain max-h-[200px]"
+                className="avatar max-h-[200px] min-h-[200px] "
                 style={{ opacity: 0.9 }}
               />
             </Link>
 
-            <CardContent className="card-bottom">
-              <div className="card-contant">
+            <CardContent className="card-bottom pb-2  flex flex-col justify-evenly items-start">
+              <div className=" flex flex-wrap items-center justify-between w-full mb-2 ">
                 <User
                   avatar={owneravatar}
                   userId={ownerId}
@@ -73,16 +73,25 @@ const Blog = ({
                   })}
                 </span>
               </div>
-              <div className="cart-text">
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  component="div"
-                  marginTop={"10px"}
-                  className=" text-xl"
-                >
-                  {title}
-                </Typography>
+
+              <div
+                // gutterBottom
+                // component="div"
+                // marginTop={"10px"}
+                className="text-[24px] overflow-hidden"
+                style={{
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  WebkitLineClamp: 3,
+                  // border: "1px solid black", // Adjust the number of lines you want to display
+                  minHeight: "fit-content",
+                  // fontSize: "24px",
+                  // marginBottom: "20px",
+                  // paddingBottom: "20px",
+                }}
+              >
+                {title}
               </div>
             </CardContent>
           </CardActionArea>

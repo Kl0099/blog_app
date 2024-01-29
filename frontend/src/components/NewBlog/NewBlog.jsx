@@ -10,6 +10,9 @@ import Loader from "../Loader/Loader"
 import { createBlog } from "../../actions/blog"
 import "react-quill/dist/quill.snow.css" // Import the styles
 import ReactQuill, { Quill } from "react-quill"
+import "react-quill/dist/quill.snow.css" // Import the styles
+import { useAlert } from "react-alert"
+import { messagenull } from "../../reducers/blog"
 
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -17,11 +20,11 @@ const toolbarOptions = [
 
   [{ header: 1 }, { header: 2 }], // custom button values
   [{ list: "ordered" }, { list: "bullet" }],
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  // [{ script: "sub" }, { script: "super" }], // superscript/subscript
   [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
   [{ direction: "rtl" }], // text direction
 
-  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+  // [{ size: ["small", false, "large", "huge"] }], // custom dropdown
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
@@ -32,8 +35,13 @@ const toolbarOptions = [
 ]
 
 const NewBlog = () => {
+  const [newloading, setNewLoading] = useState(false)
   const { isAuthenticated, user, loading } = useSelector((state) => state.user)
+  const { message } = useSelector((state) => state.singleBlog)
   // console.log(isAuthenticated, user)
+
+  const alert = useAlert()
+  // const { userId } = user && user.id
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -59,29 +67,46 @@ const NewBlog = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
+    setNewLoading(!newloading)
 
     dispatch(createBlog(title, description, image))
-    navigate(`/`)
-    window.location.reload()
+    // navigate(`/`)
+    // window.location.reload()
   }
+  useEffect(() => {
+    if (message) {
+      setNewLoading(!newloading)
+      alert.success(message)
+      dispatch(messagenull())
+      setNewLoading(!newloading)
+      navigate(`/`)
+    }
+  }, [message])
   return (
     <div
       style={{
         display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        // border: "1px solid black",
       }}
+      className="md:mt-8"
+      // className=" border min-h-[90vh]"
     >
       {loading ? (
         <Loader />
       ) : (
         <Container
           maxWidth="lg"
-          sx={{ height: "90vh" }}
-          style={{
+          sx={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "collumn",
             alignItems: "center",
             justifyContent: "space-around",
+            // border: "1px solid black",
           }}
+          className=" border sm:min-h-fit"
         >
           {/* <Typography variant="h2">Create a new Blog</Typography> */}
           <form
@@ -91,16 +116,19 @@ const NewBlog = () => {
               justifyContent: "space-evenly",
               gap: "20px",
               flexDirection: "column",
+              // border: "1px solid black",
             }}
             onSubmit={handleSubmit}
           >
-            {image === "" ? null : (
+            {image === "" ? (
+              <div className="min-h-[200px]"></div>
+            ) : (
               <img
-                width={"500px"}
-                height={"400px"}
+                // width={"100%"}
+                // height={"200px"}
                 src={image}
-                style={{ borderRadius: "20px" }}
                 alt="image"
+                className=" w-full min-h-[200px]"
               />
             )}
 
@@ -115,7 +143,7 @@ const NewBlog = () => {
 
             <input
               required
-              style={inputStyle}
+              // style={inputStyle}
               placeholder="Title...."
               type="text"
               name="title"
@@ -123,18 +151,20 @@ const NewBlog = () => {
               onChange={(e) => {
                 setTitle(e.target.value)
               }}
+              className=" border-2 w-full p-2"
             />
             <ReactQuill
               modules={{
                 toolbar: toolbarOptions,
               }}
               style={{
-                width: "100%",
-                minHeight: "200px",
-                borderRadius: "20px",
+                // height: "300px",
+                // width: "100%",
+                border: "1px solid black",
               }}
               theme="snow" // You can customize the theme
               onChange={(value) => setDescription(value)}
+              className="mb-8"
             />
 
             <div style={{ display: "flex", gap: "10px" }}>
@@ -142,6 +172,7 @@ const NewBlog = () => {
                 type="submit"
                 variant="contained"
                 color="secondary"
+                disabled={newloading}
               >
                 Create
               </Button>

@@ -6,13 +6,17 @@ import { useDispatch, useSelector } from "react-redux"
 import "./login.css"
 import { loginuser } from "../../actions/user.js"
 import { Avatar, Button, Dialog } from "@mui/material"
+import { useAlert } from "react-alert"
 const Login = () => {
+  const alert = useAlert()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   // const history = useHistory()
   const navigate = useNavigate()
+
+  const { isAuthenticated, user, message } = useSelector((state) => state.user)
 
   const [showPassword, setShowPassword] = useState(false)
   const loginHandlesubmit = async (e) => {
@@ -25,11 +29,11 @@ const Login = () => {
     if (success) {
       // Navigate to home page if login successful
       navigate("/")
+      alert.success("Login successful")
     }
 
     setLoading(false) // Reset loading state after the login attempt
   }
-  const { isAuthenticated, user } = useSelector((state) => state.user)
   // console.log(isAuthenticated, user)
 
   useEffect(() => {
@@ -38,7 +42,7 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate])
   return (
-    <div className="container">
+    <div className="containerr  md:w-full mt-12 sm:w-11/12 items-center">
       <header className="container_header">
         <Avatar
           src={

@@ -21,6 +21,7 @@ import {
   logoutrequest,
   logoutsuccess,
   logoutfailure,
+  setToken,
 } from "../reducers/user.js" // Update the import path based on your actual file structure
 
 export const loginuser = (email, password) => async (dispatch) => {
@@ -32,9 +33,16 @@ export const loginuser = (email, password) => async (dispatch) => {
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     )
+    localStorage.setItem("user", JSON.stringify(data.user))
+    localStorage.setItem("token", JSON.stringify(data.token))
+    // console.log("local user ", data.user)
+    // console.log("local token ", data.token)
+    // console.log(data)
+    dispatch(setToken(data.token))
     dispatch(loginsuccess(data.user))
   } catch (error) {
     console.log(error)
@@ -66,11 +74,18 @@ export const registeruser =
 export const loaduser = () => async (dispatch) => {
   try {
     dispatch(loaduserrequest())
-    const { data } = await axios.get("http://localhost:4000/api/v1/user/me", {
-      withCredentials: true,
-    })
-    // console.log(data)
-    dispatch(loadusersuccess(data.user))
+    const token = localStorage.getItem("token")
+    // console.log("loaduser", token)
+    if (token) {
+      const user = JSON.parse(localStorage.getItem("user"))
+      dispatch(loadusersuccess(user))
+    } else {
+      const { data } = await axios.get("http://localhost:4000/api/v1/user/me", {
+        withCredentials: true,
+      })
+      // console.log(data)
+      dispatch(loadusersuccess(data.user))
+    }
   } catch (error) {
     console.log(error)
     dispatch(loaduserfailure(error.response.data.message))
@@ -131,6 +146,8 @@ export const logoutUser = () => async (dispatch) => {
     const { data } = await axios.get("http://localhost:4000/api/v1/logout", {
       withCredentials: true,
     })
+    localStorage.removeItem("user")
+    localStorage.removeItem("token")
     dispatch(logoutsuccess(data.message))
   } catch (error) {
     console.log(error)

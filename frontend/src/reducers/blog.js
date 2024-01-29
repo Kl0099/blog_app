@@ -9,6 +9,7 @@ const singleBlogInitialState = {
   singleBlog: null,
   error: null,
   message: null,
+  deleteblogmessage: null,
   likedmessage: null,
   likedError: null,
 }
@@ -95,13 +96,28 @@ export const singleBlogSlice = createSlice({
       state.loading = false
       state.error = action.payload
     },
+    deletblogRequest: (state) => {
+      state.loading = true
+    },
+    deletblogSuccess: (state, action) => {
+      state.loading = false
+      state.deleteblogmessage = action.payload
+    },
+    deleteblogFailure: (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    },
 
     singleBlogError: (state) => {
       state.error = null
     },
+    setmessage: (state, action) => {
+      state.message = action.payload
+    },
     messagenull: (state) => {
       state.message = null
       state.likedmessage = null
+      state.deleteblogmessage = null
     },
   },
 })
@@ -123,7 +139,11 @@ export const {
   deletCommentblogRequest,
   deletCommentblogSuccess,
   deleteCommentblogFailure,
+  deletblogRequest,
+  deletblogSuccess,
+  deleteblogFailure,
   messagenull,
+  setmessage,
 } = singleBlogSlice.actions
 
 export const editBlogSlice = createSlice({

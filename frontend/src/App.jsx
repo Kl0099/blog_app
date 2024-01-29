@@ -21,6 +21,7 @@ function App() {
   useEffect(() => {
     // Load user data only on the initial mount
     dispatch(loaduser())
+    // console.log(JSON.stringify(localStorage.getItem("token")))
     // console.log("load effect")
   }, [])
 

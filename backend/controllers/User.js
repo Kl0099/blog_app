@@ -38,12 +38,14 @@ exports.register = async (req, res) => {
       },
     })
     const token = user.generateToken()
+    // req.session.token = token
     const options = {
-      expires: new Date(Date.now() + 90 * 24 * 3600 * 1000),
+      expires: new Date(Date.now() + 7 * 24 * 3600 * 1000),
       httpOnly: true,
       secure: false,
     }
     // console.log(user)
+    // const storein = localStorage.setItem("token" , token);
 
     res.status(200).cookie("token", token, options).json({
       success: true,
@@ -84,16 +86,28 @@ exports.login = async (req, res) => {
     }
     const token = await user.generateToken()
     // console.log(token)
+
     const options = {
       expires: new Date(Date.now() + 7 * 24 * 3600 * 1000),
       httpOnly: true,
       secure: false,
     }
-    res.cookie("token", token, options)
-    res.status(200).json({
+
+    // console.log("cookies", req.cookies)
+    // const storein = localStorage.setItem("token", token)
+    // console.log("Generated Token:", token)
+
+    // Store the token in the session
+    // req.session.token = token
+
+    // console.log("Token Set in Session:", req.session.token)
+    // console.log("req.session.token ", req.session)
+    // console.log(res.cookie())
+    res.status(200).cookie("token", token, options).json({
       success: true,
       user,
       token,
+
       message: "login successful",
     })
   } catch (error) {
