@@ -1,46 +1,47 @@
-import React, { useEffect, useState } from "react"
-import { Link, useParams, useNavigate } from "react-router-dom"
-import { Typography, Button } from "@mui/material"
-import Avatar from "@mui/material/Avatar"
-import { Container, Box } from "@mui/material"
-import { useDispatch, useSelector } from "react-redux"
-import User from "../User/User"
-import { FaEdit } from "react-icons/fa"
-import { FaComment } from "react-icons/fa"
+import React, { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { Typography, Button } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import { Container, Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import User from "../../pages/User/User";
+import { FaEdit } from "react-icons/fa";
+import { FaComment } from "react-icons/fa";
 import {
   commentaddandupdate,
   deleteBlog,
   deleteComment,
   getSingleBlog,
   likedAnsDisliked,
-} from "../../actions/blog"
-import "react-quill/dist/quill.snow.css" // Import the styles
-import ReactQuill, { Quill } from "react-quill"
-import { formatDistanceToNow } from "date-fns"
-import DeleteIcon from "@mui/icons-material/Delete"
-import CommentCard from "../commentcard/commentcard"
-import FavoriteIcon from "@mui/icons-material/Favorite"
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
-import { messagenull } from "../../reducers/blog"
-import { useAlert } from "react-alert"
+} from "../../actions/blog";
+import "react-quill/dist/quill.snow.css"; // Import the styles
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import CommentCard from "../commentcard/commentcard";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { messagenull } from "../../reducers/blog";
+import { useAlert } from "react-alert";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
 // import ThumbUpIcon from "@material-ui/icons/ThumbUp"
 // import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined"
 
 const SingleBlog = () => {
-  const { id } = useParams()
-  const alert = useAlert()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const alert = useAlert();
+  const navigate = useNavigate();
   // console.log(id)
 
-  const [comment, setComment] = useState("")
-  const [blog, setBlog] = useState(null)
-  const [liked, setLiked] = useState(false)
-  const dispatch = useDispatch()
+  const [comment, setComment] = useState("");
+  const [blog, setBlog] = useState(null);
+  const [liked, setLiked] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getSingleBlog(id))
+    dispatch(getSingleBlog(id));
     // console.log("single blog")
-  }, [dispatch, id])
+  }, [dispatch, id]);
   const {
     deleteblogmessage,
     loading,
@@ -48,106 +49,99 @@ const SingleBlog = () => {
     message,
     error,
     likedmessage,
-  } = useSelector((state) => state.singleBlog)
-  const [commentloading, setCommetLoading] = useState(false)
+  } = useSelector((state) => state.singleBlog);
+  const [commentloading, setCommetLoading] = useState(false);
   // console.log(singleBlog)
   // console.log("message : " + likedmessage)
-  const { isAuthenticated, user } = useSelector((state) => state.user)
+  const { isAuthenticated, user } = useSelector((state) => state.user);
 
   const handlelike = () => {
-    setLiked(!liked)
-    dispatch(likedAnsDisliked(id))
+    setLiked(!liked);
+    dispatch(likedAnsDisliked(id));
     // console.log("value of like :" + liked)
-  }
+  };
   const isValid =
-    singleBlog && isAuthenticated === true && singleBlog.owner._id === user._id
+    singleBlog && isAuthenticated === true && singleBlog.owner._id === user._id;
   const handleformsubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log("comment", comment)
-    dispatch(commentaddandupdate(id, comment))
-    setCommetLoading(!commentloading)
-  }
+    dispatch(commentaddandupdate(id, comment));
+    setCommetLoading(!commentloading);
+  };
   const deletebloghandler = () => {
-    dispatch(deleteBlog(id))
-  }
+    dispatch(deleteBlog(id));
+  };
 
   useEffect(() => {
     if (likedmessage) {
-      dispatch(getSingleBlog(id))
-      // dispatch(loaduser())
-      // window.location.reload()
-      // console.log("singlebog message : ", message)
-      alert.success(likedmessage)
-      dispatch(messagenull())
+      dispatch(getSingleBlog(id));
+      // alert.success(likedmessage);
+      dispatch(messagenull());
     }
     if (message) {
-      setCommetLoading(!commentloading)
-      dispatch(getSingleBlog(id))
+      setCommetLoading(!commentloading);
+      dispatch(getSingleBlog(id));
       // console.log(singleBlog)
-      alert.success(message)
-      dispatch(messagenull())
+      alert.success(message);
+      dispatch(messagenull());
+      setCommetLoading(!commentloading);
     }
     if (deleteblogmessage) {
-      alert.success(deleteblogmessage)
-      dispatch(messagenull())
-      navigate("/")
+      setCommetLoading(!commentloading);
+      alert.success(deleteblogmessage);
+      dispatch(messagenull());
+      setCommetLoading(!commentloading);
+      navigate("/");
     }
     if (error) {
-      console.log("comment card useeffect error: " + error)
+      console.log("comment card useeffect error: " + error);
     }
-  }, [message, likedmessage, deleteblogmessage, error])
+  }, [message, likedmessage, deleteblogmessage, error]);
   useEffect(() => {
-    setLiked(false)
+    setLiked(false);
     singleBlog &&
       user &&
       singleBlog.likes &&
       singleBlog.likes.forEach((item) => {
         if (item._id.toString() == user._id.toString()) {
-          setLiked(true)
+          setLiked(true);
           // console.log("useEffect liked:" + liked)
         }
-      })
-  }, [singleBlog, user])
+      });
+  }, [singleBlog, user]);
 
   return (
-    <div>
+    <div className="mt-10">
       {loading ? (
         <div>loading...</div>
       ) : (
-        <div className=" flex flex-col items-center border sm:w-full">
-          <div className=" w-full relative">
-            <img
-              width="100%"
-              height="600px"
-              src={singleBlog && singleBlog.image.url}
-              className=" object-cover relative w-full h-[600px]"
+        <Container className=" flex flex-col items-center max-w-6xl mx-auto min-h-screen px-3 text-wrap whitespace-pre-line overflow-hidden sm:overflow-auto">
+          <div className="flex flex-col justify-center items-center relative">
+            <CardMedia
+              component="img"
+              image={singleBlog && singleBlog.image.url}
+              className=" relative  "
             />
           </div>
           <div className=" w-full flex bg-white p-2 justify-between items-center relative">
-            <div className=" mb-20 shadow-lg min-w-[80%] relative mt-[-60px] bg-white ml-5 py-5 px-5 sm:w-full md:w-[60%] sm:text-xl">
+            <div className=" mb-20 shadow-lg min-w-[80%] relative sm:mt-[-60px] bg-white ml-5 py-5 px-5 sm:w-full md:w-[60%] sm:text-xl">
               <Typography
-                variant="h5"
+                variant="h6"
                 className=" font-small relative z-10 text-2xl sm:w-full sm:text-xl"
               >
                 {singleBlog && singleBlog.title}
               </Typography>
               <div className=" sm:flex md:flex sm:p-3 gap-8 items-center mt-5 flex-wrap mb-3">
                 <User
-                  avatar={singleBlog && singleBlog.owner.avatar.url}
+                  avatar={
+                    singleBlog &&
+                    singleBlog.owner.avatar &&
+                    singleBlog.owner.avatar.url
+                  }
                   userId={singleBlog && singleBlog.owner._id}
                   name={singleBlog && singleBlog.owner.name}
                 />
-                {/* <Typography
-                  variant="body2"
-                  className="flex md:hidden mt-3"
-                >
-                  {singleBlog &&
-                    new Date(singleBlog.updatedAt).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                </Typography> */}
+
                 <div>
                   <div className="flex gap-3 items-center flex-wrap md:justify-center ">
                     <Typography
@@ -173,7 +167,7 @@ const SingleBlog = () => {
                           singleBlog.comments.length}
                       </span>
                     </Button>
-                    {isAuthenticated && (
+                    {isAuthenticated ? (
                       <div className=" flex flex-col items-center gap-1 ml-3 ">
                         <Button
                           className=" bg-transparent w-3 flex gap-1 mx-5"
@@ -193,6 +187,18 @@ const SingleBlog = () => {
                         </Button>
                         {/* <div>{liked.toString()}</div> */}
                       </div>
+                    ) : (
+                      <Button
+                        className=" bg-transparent w-3 flex gap-1 mx-2"
+                        disabled={true}
+                      >
+                        <div className=" flex gap-1 items-center">
+                          {singleBlog &&
+                            singleBlog.likes &&
+                            singleBlog.likes.length}{" "}
+                          <span className=" text-black text-sm"> Like</span>
+                        </div>
+                      </Button>
                     )}
 
                     <div>
@@ -219,13 +225,14 @@ const SingleBlog = () => {
           </div>
 
           {singleBlog && (
-            <Typography
-              className="  prose min-w-[70%] z-10 relative"
+            <div
+              // className="sm:px-0 px-3 prose w-full whitespace-pre-line text-ellipsis z-10 relative"
+              className="p-3 max-w-2xl mx-auto w-full prose "
               dangerouslySetInnerHTML={{ __html: singleBlog.description }}
-            ></Typography>
+            ></div>
           )}
 
-          <div className=" flex items-start flex-col w-[60%] gap-5 mt-5 ">
+          <div className=" flex items-start sm:items-center flex-col w-full border sm:w-[60%] gap-5 mt-5 ">
             <Typography variant="h6">
               comments ({singleBlog && singleBlog.comments.length})
             </Typography>
@@ -258,7 +265,7 @@ const SingleBlog = () => {
                                 variant="text"
                                 color="inherit"
                                 onClick={() => {
-                                  dispatch(deleteComment(id, item._id))
+                                  dispatch(deleteComment(id, item._id));
                                 }}
                               >
                                 <DeleteIcon />
@@ -269,7 +276,7 @@ const SingleBlog = () => {
 
                         <Typography
                           variant="body2"
-                          style={{ whiteSpace: "pre-line" }}
+                          className=" whitespace-pre-line border-b-2 pb-1"
                         >
                           {item.comment}
                         </Typography>
@@ -293,13 +300,12 @@ const SingleBlog = () => {
                       // rows="8"
                       placeholder="add your review"
                       onChange={(e) => setComment(e.target.value)}
-                      className="w-full h-[200px] rounded-sm border-slate-700 p-2  border-solid  mb-2"
+                      className="w-full h-[200px] rounded-sm border-slate-700 p-2  border  mb-2"
                     ></textarea>
                     <Button
                       variant="contained"
                       color="secondary"
                       type="submit"
-                      disabled={commentloading}
                       className=" w-[100px] mt-5 m-5"
                     >
                       write
@@ -309,10 +315,10 @@ const SingleBlog = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SingleBlog
+export default SingleBlog;

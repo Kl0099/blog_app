@@ -1,87 +1,79 @@
-import React, { useEffect, useState } from "react"
-import Paper from "@mui/material/Paper"
-import Grid from "@mui/material/Grid"
-import Blog from "../blogs/Blog"
-import { Container, Button } from "@mui/material"
-import Typography from "@mui/material/Typography"
-import { Link, useParams, useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-import Loader from "../Loader/Loader"
-import { createBlog } from "../../actions/blog"
-import "react-quill/dist/quill.snow.css" // Import the styles
-import ReactQuill, { Quill } from "react-quill"
-import "react-quill/dist/quill.snow.css" // Import the styles
-import { useAlert } from "react-alert"
-import { messagenull } from "../../reducers/blog"
+import React, { useEffect, useState } from "react";
 
+import { Container, Button } from "@mui/material";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../components/Loader/Loader";
+import { createBlog } from "../../actions/blog";
+import "react-quill/dist/quill.snow.css";
+import { useAlert } from "react-alert";
+import { messagenull } from "../../reducers/blog";
+import ReactQuill from "react-quill";
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
   ["blockquote", "code-block"],
 
-  [{ header: 1 }, { header: 2 }], // custom button values
+  // [{ header: 1 }, { header: 2 }], // custom button values
   [{ list: "ordered" }, { list: "bullet" }],
   // [{ script: "sub" }, { script: "super" }], // superscript/subscript
   [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-  [{ direction: "rtl" }], // text direction
+  // [{ direction: "rtl" }], // text direction
 
   // [{ size: ["small", false, "large", "huge"] }], // custom dropdown
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  ["link", "video"],
 
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
   [{ font: [] }],
   [{ align: [] }],
 
   ["clean"], // remove formatting button
-]
+];
 
 const NewBlog = () => {
-  const [newloading, setNewLoading] = useState(false)
-  const { isAuthenticated, user, loading } = useSelector((state) => state.user)
-  const { message } = useSelector((state) => state.singleBlog)
+  const [newloading, setNewLoading] = useState(false);
+  const { isAuthenticated, user, loading } = useSelector((state) => state.user);
+  const { message } = useSelector((state) => state.singleBlog);
   // console.log(isAuthenticated, user)
 
-  const alert = useAlert()
+  const alert = useAlert();
   // const { userId } = user && user.id
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const inputStyle = {
-    padding: "10px",
-    width: "100%",
-    borderRadius: "20px",
-    outline: "none",
-    border: "1px solid rgba(0,0,0,1)",
-  }
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [image, setImage] = useState("")
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
   const handleimagechange = (e) => {
-    const file = e.target.files[0]
-    const Reader = new FileReader()
-    Reader.readAsDataURL(file)
+    const file = e.target.files[0];
+    const Reader = new FileReader();
+    Reader.readAsDataURL(file);
     Reader.onload = () => {
       if (Reader.readyState === 2) {
-        setImage(Reader.result)
+        setImage(Reader.result);
+        // console.log(Reader.result);
       }
-    }
-  }
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setNewLoading(!newloading)
+    };
+  };
 
-    dispatch(createBlog(title, description, image))
-    // navigate(`/`)
-    // window.location.reload()
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setNewLoading(!newloading);
+
+    dispatch(createBlog(title, description, image));
+  };
+  const handleQuillChange = (value) => {
+    setDescription(value);
+  };
   useEffect(() => {
     if (message) {
-      setNewLoading(!newloading)
-      alert.success(message)
-      dispatch(messagenull())
-      setNewLoading(!newloading)
-      navigate(`/`)
+      setNewLoading(!newloading);
+      alert.success(message);
+      dispatch(messagenull());
+      setNewLoading(!newloading);
+      navigate(`/`);
     }
-  }, [message])
+  }, [message]);
   return (
     <div
       style={{
@@ -106,7 +98,7 @@ const NewBlog = () => {
             justifyContent: "space-around",
             // border: "1px solid black",
           }}
-          className=" border sm:min-h-fit"
+          className=" border h-full"
         >
           {/* <Typography variant="h2">Create a new Blog</Typography> */}
           <form
@@ -116,6 +108,7 @@ const NewBlog = () => {
               justifyContent: "space-evenly",
               gap: "20px",
               flexDirection: "column",
+              width: "100%",
               // border: "1px solid black",
             }}
             onSubmit={handleSubmit}
@@ -126,19 +119,21 @@ const NewBlog = () => {
               <img
                 // width={"100%"}
                 // height={"200px"}
+                // image={image}
                 src={image}
                 alt="image"
-                className=" w-full min-h-[200px]"
+                className=" w-full min-h-[500px] object-contain"
               />
             )}
 
             <input
               accept="image/*"
-              required
+              // required
               type="file"
               name="file"
               id="file"
               onChange={handleimagechange}
+              className=" w-full border"
             />
 
             <input
@@ -149,7 +144,7 @@ const NewBlog = () => {
               name="title"
               id="title"
               onChange={(e) => {
-                setTitle(e.target.value)
+                setTitle(e.target.value);
               }}
               className=" border-2 w-full p-2"
             />
@@ -158,16 +153,20 @@ const NewBlog = () => {
                 toolbar: toolbarOptions,
               }}
               style={{
-                // height: "300px",
-                // width: "100%",
-                border: "1px solid black",
+                overflowWrap: "break-word", // Set word wrap to break-word
+                wordWrap: "break-word",
+
+                width: "100%",
+                outline: "none",
               }}
+              placeholder="write something...."
               theme="snow" // You can customize the theme
-              onChange={(value) => setDescription(value)}
+              value={description}
+              onChange={setDescription}
               className="mb-8"
             />
 
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
               <Button
                 type="submit"
                 variant="contained"
@@ -180,7 +179,7 @@ const NewBlog = () => {
                 variant="primary"
                 color="inherit"
                 onClick={() => {
-                  navigate(-1)
+                  navigate(-1);
                 }}
               >
                 Back
@@ -190,7 +189,7 @@ const NewBlog = () => {
         </Container>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default NewBlog
+export default NewBlog;

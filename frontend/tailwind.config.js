@@ -5,6 +5,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./utility/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       fontSize: {
@@ -19,4 +20,4 @@ export default {
     },
   },
   plugins: [require("@tailwindcss/typography")],
-}
+};

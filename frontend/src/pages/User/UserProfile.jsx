@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from "react"
-import { Link, useParams, useNavigate } from "react-router-dom"
-import Typography from "@mui/material/Typography"
-import { Avatar, Button, Dialog } from "@mui/material"
-import { Container, Box } from "@mui/material"
-import Grid from "@mui/material/Grid"
-import { useDispatch, useSelector } from "react-redux"
-import Blog from "../blogs/Blog"
+import React, { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import { Avatar, Button, Dialog } from "@mui/material";
+import { Container, Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { useDispatch, useSelector } from "react-redux";
+import Blog from "../../components/blogs/Blog";
 import {
   edituser,
   getBlogsOfUser,
   getUser,
   loaduser,
   logoutUser,
-} from "../../actions/user"
-import Loader from "../Loader/Loader"
-import { FaEdit } from "react-icons/fa"
+} from "../../actions/user";
+import Loader from "../../components/Loader/Loader";
+import { FaEdit } from "react-icons/fa";
+import { useAlert } from "react-alert";
+import { usererrornull, usermessagenull } from "../../reducers/user";
 
 const UserProfile = () => {
-  const navigate = useNavigate()
-  const { id } = useParams()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const dispatch = useDispatch();
 
   const {
     editloading,
@@ -28,64 +30,74 @@ const UserProfile = () => {
     isAuthenticated,
     message,
     editusermessage,
-  } = useSelector((state) => state.user)
+    error,
+  } = useSelector((state) => state.user);
 
-  const [toggle, setToggle] = useState(false)
-  const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
-  const [newAvatar, setNewAvatar] = useState("")
-  const [avatar, setAvatar] = useState("")
-  const [editload, setEditLoad] = useState(false)
+  const [toggle, setToggle] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [newAvatar, setNewAvatar] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [editload, setEditLoad] = useState(false);
 
+  const alert = useAlert();
   const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(edituser(email, name, newAvatar))
-    setEditLoad(!editload)
-  }
+    e.preventDefault();
+    dispatch(edituser(email, name, newAvatar));
+    setEditLoad(!editload);
+  };
   useEffect(() => {
-    dispatch(getUser(id))
-  }, [])
+    dispatch(getUser(id));
+  }, []);
   const { loading: getuserloading, userBlogs: getuser } = useSelector(
     (state) => state.getuser
-  )
+  );
   // console.log(getuser)
   useEffect(() => {
     if (editusermessage) {
-      setEditLoad(!editload)
-      setToggle(!toggle)
-      dispatch(getUser(id))
-      console.log(editusermessage)
+      setEditLoad(!editload);
+      setToggle(!toggle);
+      dispatch(getUser(id));
+      // console.log(editusermessage)
+      alert.success(editusermessage);
+      // dispatch(mess)
+      dispatch(usermessagenull());
     }
-  }, [editusermessage])
+    if (error) {
+      alert.error(error);
+      dispatch(usererrornull());
+      setToggle(!toggle);
+    }
+  }, [editusermessage, error]);
   useEffect(() => {
     if (user) {
-      setEmail(user.email)
-      setName(user.name)
-      setAvatar(user.avatar)
+      setEmail(user.email);
+      setName(user.name);
+      setAvatar(user.avatar);
     }
-  }, [user])
+  }, [user]);
   const handlelogout = () => {
-    dispatch(logoutUser())
-    navigate("/")
-  }
+    dispatch(logoutUser());
+    navigate("/");
+  };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    const Reader = new FileReader()
-    Reader.readAsDataURL(file)
+    const file = e.target.files[0];
+    const Reader = new FileReader();
+    Reader.readAsDataURL(file);
     Reader.onload = () => {
       if (Reader.readyState === 2) {
-        setNewAvatar(Reader.result)
+        setNewAvatar(Reader.result);
       }
-    }
-  }
+    };
+  };
 
   return (
     <div>
       {getuserloading ? (
         <Loader />
       ) : (
-        <div className=" mb-8">
+        <div className=" mb-8 ">
           {getuser && (
             <div>
               <Container>
@@ -98,6 +110,7 @@ const UserProfile = () => {
                   gap={"20px"}
                 >
                   <Avatar
+                    alt={getuser && getuser.name}
                     style={{
                       width: "200px",
                       height: "200px",
@@ -136,16 +149,16 @@ const UserProfile = () => {
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid
                     container
-                    spacing={{ xs: 2, md: 4 }}
-                    columns={{ xs: 4, sm: 8, md: 12 }}
+                    spacing={{ xs: 1, md: 6 }}
+                    columns={{ xs: 1, sm: 2, md: 12 }}
                   >
                     {getuser &&
                       getuser.blogs &&
                       getuser.blogs.map((blog, index) => (
                         <Grid
                           item
-                          xs={3}
-                          sm={4}
+                          xs={1}
+                          sm={1}
                           md={4}
                           key={getuser && blog._id ? blog._id : index}
                         >
@@ -176,32 +189,25 @@ const UserProfile = () => {
               <Dialog
                 open={toggle}
                 onClose={() => setToggle(!toggle)}
+                className=" flex items-center justify-center  "
               >
                 <form
                   onSubmit={handleSubmit}
-                  style={{
-                    minWidth: "500px",
-                    height: "60vh",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-evenly",
-                    gap: "20px",
-                    flexDirection: "column",
-                  }}
-                  className=""
+                  className=" border h-[60vh] flex items-center justify-evenly gap-5 flex-col w-[600px] min-w-[300px]"
                 >
                   <Avatar
                     style={{
                       width: "100px",
                       height: "100px",
                     }}
-                    src={newAvatar !== "" ? newAvatar : avatar}
+                    src={newAvatar}
                   />
                   <input
                     type="file"
                     name="file"
                     id="file"
                     onChange={handleImageChange}
+                    className=" border md:w-1/2"
                   />
                   <input
                     style={{
@@ -254,6 +260,6 @@ const UserProfile = () => {
         </div>
       )}
     </div>
-  )
-}
-export default UserProfile
+  );
+};
+export default UserProfile;

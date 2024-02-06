@@ -1,7 +1,21 @@
-import React from "react"
+import React from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 const Loader = () => {
-  return <div>Loader</div>
-}
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        height: "100vh",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress size={40} />
+    </Box>
+  );
+};
 
-export default Loader
+export default Loader;

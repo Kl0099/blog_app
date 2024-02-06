@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react"
-import User from "../User/User"
-import { Link, useParams } from "react-router-dom"
-import { Typography, Button } from "@mui/material"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect, useState } from "react";
+import User from "../../pages/User/User";
+import { Link, useParams } from "react-router-dom";
+import { Typography, Button } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
-import DeleteIcon from "@mui/icons-material/Delete"
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   commentaddandupdate,
   deleteComment,
   getSingleBlog,
-} from "../../actions/blog"
-import { loaduser } from "../../actions/user"
+} from "../../actions/blog";
+import { loaduser } from "../../actions/user";
 const CommentCard = () => {
-  const [comment, setComment] = useState("")
-  const { isAuthenticated, user } = useSelector((state) => state.user)
+  const [comment, setComment] = useState("");
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const { loading, singleBlog, message, error } = useSelector(
     (state) => state.singleBlog
-  )
+  );
   const isValid =
-    singleBlog && isAuthenticated === true && singleBlog.owner._id === user._id
-  const dispatch = useDispatch()
-  const { id } = useParams()
+    singleBlog && isAuthenticated === true && singleBlog.owner._id === user._id;
+  const dispatch = useDispatch();
+  const { id } = useParams();
   const handleformsubmit = (e) => {
-    e.preventDefault()
-    dispatch(commentaddandupdate(id, comment))
-  }
+    e.preventDefault();
+    dispatch(commentaddandupdate(id, comment));
+  };
 
   // useEffect(() => {
   //   dispatch(getSingleBlog(id))
@@ -84,8 +84,8 @@ const CommentCard = () => {
                             variant="text"
                             color="inherit"
                             onClick={() => {
-                              dispatch(deleteComment(id, item._id))
-                              dispatch(getSingleBlog(id))
+                              dispatch(deleteComment(id, item._id));
+                              dispatch(getSingleBlog(id));
                             }}
                           >
                             <DeleteIcon />
@@ -141,7 +141,7 @@ const CommentCard = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CommentCard
+export default CommentCard;

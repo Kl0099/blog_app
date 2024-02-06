@@ -1,26 +1,29 @@
-import React, { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getAllblogs } from "../../actions/blog"
-import Box from "@mui/material/Box"
-import Paper from "@mui/material/Paper"
-import Grid from "@mui/material/Grid"
-import Blog from "../blogs/Blog"
-import Container from "@mui/material/Container"
-import Typography from "@mui/material/Typography"
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllblogs } from "../../actions/blog";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Blog from "../../components/blogs/Blog";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Loader from "../../components/Loader/Loader";
 
 const Home = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     // Load user data only on the initial mount
-    dispatch(getAllblogs())
+    dispatch(getAllblogs());
 
-    console.log("home page ")
-  }, [dispatch])
-  const { loading, blogs } = useSelector((state) => state.blogs)
+    // console.log("home page ");
+  }, [dispatch]);
+  const { loading, blogs } = useSelector((state) => state.blogs);
   // console.log(loading)
   // console.log(blogs)
-  return (
-    <div className="  min-w-full homeContainer mb-6">
+  return loading === true ? (
+    <Loader />
+  ) : (
+    <div className=" dark:bg-blue-950  min-w-full homeContainer mb-6">
       {/* <Container className=" border items-center justify-center flex flex-col  text-center mb-2 md:h-[40vh] md:mt-12 sm:w-full sm:text-xl  w-full">
         <div className=" border mt-12 md:mt-12 flex flex-col items-center justify-center">
           <Typography
@@ -104,7 +107,7 @@ const Home = () => {
         )}
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

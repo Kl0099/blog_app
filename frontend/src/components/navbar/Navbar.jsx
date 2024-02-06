@@ -1,83 +1,64 @@
-import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
-// import { Container, Button, Avatar } from "@mui/material"
-// import {} from "@mui/icons-material"
-// import Typography from "@mui/material/Typography"
-import "./navbar.css"
-import "../../App.css"
-import Loader from "../Loader/Loader"
-import User from "../User/User"
-import { getUser, loaduser, logoutUser } from "../../actions/user"
-import { usermessagenull } from "../../reducers/user"
-import AppBar from "@mui/material/AppBar"
-import Box from "@mui/material/Box"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
-import Typography from "@mui/material/Typography"
-import Menu from "@mui/material/Menu"
-import MenuIcon from "@mui/icons-material/Menu"
-import Container from "@mui/material/Container"
-import Avatar from "@mui/material/Avatar"
-import Button from "@mui/material/Button"
-import Tooltip from "@mui/material/Tooltip"
-import MenuItem from "@mui/material/MenuItem"
-import AdbIcon from "@mui/icons-material/Adb"
-import { useAlert } from "react-alert"
-
-const pages = [
-  { name: "profile", path: "/userprofile" },
-  { name: "home", path: "/" },
-  { name: "logout", path: "/logout" },
-]
-const settings = ["Profile", "Account", "Dashboard", "Logout"]
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import "./navbar.css";
+import "../../App.css";
+import Loader from "../Loader/Loader";
+import { getUser, loaduser, logoutUser } from "../../actions/user";
+import { usermessagenull } from "../../reducers/user";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import { useAlert } from "react-alert";
 
 const Navbar = () => {
-  const alert = useAlert()
-  const dispatch = useDispatch()
+  const alert = useAlert();
+  const dispatch = useDispatch();
   const { isAuthenticated, user, loading, message, editusermessage } =
-    useSelector((state) => state.user)
-  const LinkStyle = {
-    textDecoration: "none",
-    color: "black",
-    cursor: "pointer",
-  }
-  const buttonStyle = {
-    borderRadius: "20px",
-  }
+    useSelector((state) => state.user);
+
   // console.log(user)
   useEffect(() => {
     if (editusermessage) {
-      dispatch(loaduser())
-      dispatch(usermessagenull())
+      dispatch(loaduser());
+      dispatch(usermessagenull());
     }
-  }, [editusermessage])
-  const [anchorElNav, setAnchorElNav] = useState(null)
-  const [anchorElUser, setAnchorElUser] = useState(null)
+  }, [editusermessage]);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget)
-  }
+    setAnchorElNav(event.currentTarget);
+  };
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget)
-  }
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
+    setAnchorElNav(null);
+  };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
+    setAnchorElUser(null);
+  };
   const handleLogout = () => {
-    dispatch(logoutUser())
-  }
+    dispatch(logoutUser());
+  };
   useEffect(() => {
     if (message) {
-      alert.success(message)
-      dispatch(usermessagenull())
+      alert.success(message);
+      dispatch(usermessagenull());
     }
-  }, [message])
+  }, [message]);
 
   return (
     <div>
@@ -177,6 +158,11 @@ const Navbar = () => {
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Link to={"#"}>ContactUs</Link>
                   </MenuItem>
+                  {isAuthenticated && (
+                    <MenuItem onClick={handleCloseNavMenu}>
+                      <Link to={"/newblog"}>NewBlog</Link>
+                    </MenuItem>
+                  )}
                 </Menu>
               </Box>
               {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
@@ -356,7 +342,7 @@ const Navbar = () => {
         </AppBar>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

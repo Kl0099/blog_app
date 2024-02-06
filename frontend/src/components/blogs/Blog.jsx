@@ -1,22 +1,22 @@
-import React, { useState } from "react"
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
-import CardMedia from "@mui/material/CardMedia"
-import Typography from "@mui/material/Typography"
-import Avatar from "@mui/material/Avatar"
-import { Dialog } from "@mui/material"
-import { CardActionArea } from "@mui/material"
-import Container from "@mui/material/Container"
-import { Link } from "react-router-dom"
-import User from "../User/User"
+import React, { useState } from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import { Dialog } from "@mui/material";
+import { CardActionArea } from "@mui/material";
+import Container from "@mui/material/Container";
+import { Link } from "react-router-dom";
+import User from "../../pages/User/User";
 
-import { formatDistance, formatDistanceToNow } from "date-fns"
-import FavoriteIcon from "@mui/icons-material/Favorite"
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
+import { formatDistance, formatDistanceToNow } from "date-fns";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import { useDispatch, useSelector } from "react-redux"
-import "../User/user.css"
-import "./blog.css"
+import { useDispatch, useSelector } from "react-redux";
+import "../../pages/User/user.css";
+import "./blog.css";
 
 const Blog = ({
   blogId,
@@ -29,8 +29,8 @@ const Blog = ({
   ownerId,
   likes,
 }) => {
-  const [toggle, setToggle] = useState(false)
-  const { isAuthenticated, user, loading } = useSelector((state) => state.user)
+  const [toggle, setToggle] = useState(false);
+  const { isAuthenticated, user, loading } = useSelector((state) => state.user);
   // console.log(isAuthenticated, user)
 
   return (
@@ -49,7 +49,7 @@ const Blog = ({
                 component="img"
                 image={image}
                 alt="green iguana"
-                className="avatar max-h-[200px] min-h-[200px] "
+                className="avatar max-h-[200px] min-h-[200px] object-fill"
                 style={{ opacity: 0.9 }}
               />
             </Link>
@@ -98,7 +98,7 @@ const Blog = ({
         </Card>
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
