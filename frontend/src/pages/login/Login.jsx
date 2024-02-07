@@ -167,10 +167,6 @@ const Login = () => {
               textTransform: "none",
               outline: "1px solid grey",
             }}
-            // onClick={handleotpsubmit}o
-            // onClick={() => {
-            //   setToggle(true);
-            // }}
             onClick={googleAuth}
           >
             <span className=" pr-1 text-xl focus:outline-gray-300 focus:outline-2">

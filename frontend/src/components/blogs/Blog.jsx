@@ -37,11 +37,11 @@ const Blog = ({
     <div className=" flex ">
       <Container
         maxWidth="sm"
-        className="  max-h-[600px]  sm:w-1/2   "
+        className="  max-h-[600px]  sm:w-1/2    "
       >
         <Card
           // sx={{ maxWidth: 400, maxHeight: 500, minWidth: 300, minHeight: 400 }}
-          className=" mt-4 rounded-md min-h-[400px] max-h-[300px] hover:shadow-2xl "
+          className="  mt-4 rounded-md min-h-[400px] max-h-[300px] hover:shadow-2xl "
         >
           <CardActionArea>
             <Link to={`/blog/${blogId}`}>
@@ -54,7 +54,7 @@ const Blog = ({
               />
             </Link>
 
-            <CardContent className="card-bottom pb-2  flex flex-col justify-evenly items-start">
+            <CardContent className=" card-bottom pb-2  flex flex-col justify-evenly items-start">
               <div className=" flex flex-wrap items-center justify-between w-full mb-2 ">
                 <User
                   avatar={owneravatar}

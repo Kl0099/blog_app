@@ -19,6 +19,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useAlert } from "react-alert";
+import "../../App.css";
 
 const Navbar = () => {
   const alert = useAlert();
@@ -137,18 +138,6 @@ const Navbar = () => {
                   }}
                   className=" text-black"
                 >
-                  {/* {pages.map((page) => (
-                    <MenuItem
-                      key={page.name}
-                      onClick={handleCloseNavMenu}
-                    >
-                      <Link
-                        to={page.path}
-                      >
-                        {page.name}
-                      </Link>
-                    </MenuItem>
-                  ))} */}
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Link to={"/"}>Home</Link>
                   </MenuItem>
@@ -197,6 +186,7 @@ const Navbar = () => {
                 <Link to={"#"}>about</Link>
                 <Link to={"#"}>ContactUs</Link>
                 {isAuthenticated && <Link to={"/newBlog"}>NewBlog</Link>}
+                {/* <Darkmode /> */}
               </Box>
 
               <Box sx={{ flexGrow: 0 }}>
@@ -248,14 +238,6 @@ const Navbar = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    {/* {settings.map((setting) => (
-                      <MenuItem
-                        key={setting}
-                        onClick={handleCloseUserMenu}
-                      >
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))} */}
                     <MenuItem onClick={handleCloseUserMenu}>
                       <Link
                         onClick={handleLogout}
@@ -286,14 +268,6 @@ const Navbar = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    {/* {settings.map((setting) => (
-                      <MenuItem
-                        key={setting}
-                        onClick={handleCloseUserMenu}
-                      >
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))} */}
                     <MenuItem onClick={handleCloseUserMenu}>
                       <Link to={"/login"}>Login</Link>
                     </MenuItem>
@@ -303,39 +277,6 @@ const Navbar = () => {
                     </MenuItem>
                   </Menu>
                 )}
-                {/* <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem
-                      key={setting}
-                      onClick={handleCloseUserMenu}
-                    >
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <Link to={"/logout"}>Logout</Link>
-                      </MenuItem>
-                    
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <Link to={"/logout"}>Profile</Link>
-                      </MenuItem>
-                    
-                </Menu> */}
               </Box>
             </Toolbar>
           </Container>

@@ -5,7 +5,6 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./utility/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       fontSize: {
@@ -16,6 +15,11 @@ export default {
       },
       screens: {
         sm: "640px",
+      },
+      customClasses: {
+        "background-gradient":
+          "background: linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
+        // Add more custom classes as needed
       },
     },
   },

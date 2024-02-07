@@ -14,7 +14,7 @@ exports.mailSender = async (email, subject, body) => {
     });
 
     let info = transporter.sendMail({
-      from: "Blog App",
+      from: '"Blog App " blogapp24@gmail.com',
       to: `${email}`,
       subject: `${subject}`,
       html: `${body}`,

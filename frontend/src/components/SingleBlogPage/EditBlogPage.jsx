@@ -14,14 +14,15 @@ const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
   ["blockquote", "code-block"],
 
-  [{ header: 1 }, { header: 2 }], // custom button values
+  // [{ header: 1 }, { header: 2 }], // custom button values
   [{ list: "ordered" }, { list: "bullet" }],
   // [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  // [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
   // [{ direction: "rtl" }], // text direction
 
-  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+  // [{ size: ["small", false, "large", "huge"] }], // custom dropdown
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  ["link", "video"],
 
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
   [{ font: [] }],
@@ -69,8 +70,6 @@ const EditBlogPage = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     dispatch(updateBlog(title, description, id, image));
-    // navigate(`/blog/${id}`);
-    // console.log(ans);
   };
   useEffect(() => {
     if (message) {
@@ -115,8 +114,6 @@ const EditBlogPage = () => {
           <div className="min-h-[200px]"></div>
         ) : (
           <img
-            // width={"100%"}
-            // height={"200px"}
             src={image}
             alt="image"
             className=" min-h-[200px] object-contain"
@@ -151,8 +148,6 @@ const EditBlogPage = () => {
             toolbar: toolbarOptions,
           }}
           style={{
-            // height: "300px",
-            // width: "100%",
             flexWrap: "wrap",
             // border: "1px solid black",
           }}

@@ -24,6 +24,7 @@ import { messagenull } from "../../reducers/blog";
 import { useAlert } from "react-alert";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import Loader from "../Loader/Loader";
 // import ThumbUpIcon from "@material-ui/icons/ThumbUp"
 // import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined"
 
@@ -113,9 +114,9 @@ const SingleBlog = () => {
   return (
     <div className="mt-10">
       {loading ? (
-        <div>loading...</div>
+        <Loader />
       ) : (
-        <Container className=" flex flex-col items-center max-w-6xl mx-auto min-h-screen px-3 text-wrap whitespace-pre-line overflow-hidden sm:overflow-auto">
+        <Container className=" flex flex-col items-center max-w-6xl mx-auto min-h-screen px-3 text-wrap overflow-hidden sm:overflow-auto sm:items-center">
           <div className="flex flex-col justify-center items-center relative">
             <CardMedia
               component="img"
@@ -225,14 +226,14 @@ const SingleBlog = () => {
           </div>
 
           {singleBlog && (
-            <div
+            <Typography
               // className="sm:px-0 px-3 prose w-full whitespace-pre-line text-ellipsis z-10 relative"
               className="p-3 max-w-2xl mx-auto w-full prose "
               dangerouslySetInnerHTML={{ __html: singleBlog.description }}
-            ></div>
+            ></Typography>
           )}
 
-          <div className=" flex items-start sm:items-center flex-col w-full border sm:w-[60%] gap-5 mt-5 ">
+          <div className=" flex items-start  sm:flex-col sm:items-start flex-col gap-5 mt-5 max-w-2xl mx-auto">
             <Typography variant="h6">
               comments ({singleBlog && singleBlog.comments.length})
             </Typography>

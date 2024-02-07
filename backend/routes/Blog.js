@@ -1,7 +1,7 @@
-const express = require("express")
-const router = express.Router()
-const Blog = require("../models/Blog")
-const { isAuthenticated } = require("../middlewares/authmiddleware")
+const express = require("express");
+const router = express.Router();
+const Blog = require("../models/Blog");
+const { isAuthenticated } = require("../middlewares/authmiddleware");
 const {
   createBlog,
   likeAndDislike,
@@ -11,21 +11,19 @@ const {
   updateBlog,
   getAllBlogs,
   getSingleblog,
-  convertblog,
-} = require("../controllers/Blog")
+} = require("../controllers/Blog");
 
-router.route("/Blog/create").post(isAuthenticated, createBlog)
-router.route("/Blog").get(getAllBlogs)
-router.route("/blog/convert").post(convertblog)
-router.route("/BlogSingle/:id").get(getSingleblog)
+router.route("/Blog/create").post(isAuthenticated, createBlog);
+router.route("/Blog").get(getAllBlogs);
+router.route("/BlogSingle/:id").get(getSingleblog);
 router
   .route("/Blog/:id")
   .get(isAuthenticated, likeAndDislike)
   .delete(isAuthenticated, deleteBlog)
-  .put(isAuthenticated, updateBlog)
+  .put(isAuthenticated, updateBlog);
 router
   .route("/Blog/comment/:id")
   .put(isAuthenticated, addAndUpdateComment)
-  .delete(isAuthenticated, deleteComment)
+  .delete(isAuthenticated, deleteComment);
 
-module.exports = router
+module.exports = router;

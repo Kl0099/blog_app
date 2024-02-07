@@ -36,29 +36,6 @@ exports.createBlog = async (req, res) => {
     });
   }
 };
-exports.convertblog = async (req, res) => {
-  try {
-    const html =
-      "<h1>dfasdfasd</h1><h2>sdfaasdfsd</h2><h3>dfgsdfgsg</h3><ol><li><strong>akrjteriaubjgg</strong></li><li><strong>;;khaiabfaf</strong></li><li><strong>skfnaoiuabkjabfafa</strong></li><li><strong><em>allfjpifhsdfasff</em></strong></li></ol>";
-    const conHtmlToPlane = async (html) => {
-      const cleanDoc = DOMPurify.sanitize(html, {
-        USE_PROFILES: { html: true },
-      });
-
-      const plainText = cleanDoc.textContent;
-      return plainText;
-    };
-
-    const plainText = await conHtmlToPlane(html);
-
-    // const ans = conHtmlToPlane(htmltext)
-    console.log(plainText);
-    res.status(200).json({ plainText });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
-  }
-};
 exports.likeAndDislike = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -139,13 +116,6 @@ exports.deleteComment = async (req, res) => {
         success: false,
         message: "not found",
       });
-    // console.log("param id : ", req.params.id)
-    // console.log("kya blog owner hi user hai : ", blog.owner == req.user.id)
-    // console.log(req.body.commentId)
-    // console.log(req.user._id)
-    // console.log(req.body)
-    // console.log(blog.owner)
-    // console.log(req.user.id)
 
     if (blog.owner == req.user.id) {
       blog.comments.forEach((item, index) => {

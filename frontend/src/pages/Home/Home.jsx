@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllblogs } from "../../actions/blog";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import { Grid, Button } from "@mui/material";
 import Blog from "../../components/blogs/Blog";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -23,27 +23,7 @@ const Home = () => {
   return loading === true ? (
     <Loader />
   ) : (
-    <div className=" dark:bg-blue-950  min-w-full homeContainer mb-6">
-      {/* <Container className=" border items-center justify-center flex flex-col  text-center mb-2 md:h-[40vh] md:mt-12 sm:w-full sm:text-xl  w-full">
-        <div className=" border mt-12 md:mt-12 flex flex-col items-center justify-center">
-          <Typography
-            variant="h2"
-            className=" mt-5 "
-          >
-            Our Fresh Blogs
-          </Typography>
-          <Typography
-            variant="body1"
-            textAlign={"center"}
-            marginTop={"30px"}
-          >
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum
-            doloremque maiores accusantium dolorem dicta cupiditate eligendi
-            nulla dolorum et rerum. Lorem ipsum dolor,usantium dolorem dicta
-            cupiditate eligendi nulla dolorum et rerum.
-          </Typography>
-        </div>
-      </Container> */}
+    <div className="  min-w-full homeContainer mb-6">
       <Container className=" items-center justify-center flex flex-col text-center mb-2  md:mt-12 sm:w-full sm:text-xl w-full md:py-16">
         <div className=" mt-12 md:mt-12 flex flex-col items-center justify-center">
           <Typography

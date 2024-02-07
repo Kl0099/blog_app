@@ -1,9 +1,9 @@
-import React from "react"
-import { useParams, Link } from "react-router-dom"
-import Typography from "@mui/material/Typography"
-import Avatar from "@mui/material/Avatar"
-import { formatDistanceToNow } from "date-fns"
-import "./user.css"
+import React from "react";
+import { useParams, Link } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import { formatDistanceToNow } from "date-fns";
+import "./user.css";
 const User = ({ avatar, name, userId, date = null }) => {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -32,7 +32,7 @@ const User = ({ avatar, name, userId, date = null }) => {
         )}
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;

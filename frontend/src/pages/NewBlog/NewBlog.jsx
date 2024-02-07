@@ -100,7 +100,6 @@ const NewBlog = () => {
           }}
           className=" border h-full"
         >
-          {/* <Typography variant="h2">Create a new Blog</Typography> */}
           <form
             style={{
               display: "flex",
@@ -117,9 +116,6 @@ const NewBlog = () => {
               <div className="min-h-[200px]"></div>
             ) : (
               <img
-                // width={"100%"}
-                // height={"200px"}
-                // image={image}
                 src={image}
                 alt="image"
                 className=" w-full min-h-[500px] object-contain"
@@ -128,7 +124,7 @@ const NewBlog = () => {
 
             <input
               accept="image/*"
-              // required
+              required
               type="file"
               name="file"
               id="file"
@@ -138,7 +134,6 @@ const NewBlog = () => {
 
             <input
               required
-              // style={inputStyle}
               placeholder="Title...."
               type="text"
               name="title"

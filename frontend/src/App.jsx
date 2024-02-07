@@ -14,6 +14,7 @@ import UserProfile from "./pages/User/UserProfile";
 import EditBlogPage from "./components/SingleBlogPage/EditBlogPage";
 import NewBlog from "./pages/NewBlog/NewBlog";
 import ForgotPassword from "./pages/ForgotPassword";
+import Footer from "./components/Footer/Footer";
 function App() {
   const dispatch = useDispatch();
   // const navigate = useNavigate()
@@ -28,7 +29,7 @@ function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   // console.log(user)
   return (
-    <>
+    <div>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -66,8 +67,9 @@ function App() {
             element={<NewBlog />}
           />
         </Routes>
+        <Footer />
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 

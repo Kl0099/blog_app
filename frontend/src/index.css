@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
+
+.background {
+  @apply bg-gradient-to-br from-black via-transparent to-blue-500;
+}
+
 @tailwind utilities;

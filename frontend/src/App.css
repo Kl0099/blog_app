@@ -16,6 +16,13 @@ Link {
   margin: 0px;
   padding: 0px;
 }
+.background {
+  background: linear-gradient(
+    89.7deg,
+    rgb(0, 0, 0) -10.7%,
+    rgb(53, 92, 125) 88.8%
+  ) !important;
+}
 
 @media screen and (max-width: 639px) {
   .homeContainer {
