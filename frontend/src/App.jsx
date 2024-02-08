@@ -15,6 +15,7 @@ import EditBlogPage from "./components/SingleBlogPage/EditBlogPage";
 import NewBlog from "./pages/NewBlog/NewBlog";
 import ForgotPassword from "./pages/ForgotPassword";
 import Footer from "./components/Footer/Footer";
+import NotFound from "./components/NotFound/NotFound";
 function App() {
   const dispatch = useDispatch();
   // const navigate = useNavigate()
@@ -65,6 +66,10 @@ function App() {
           <Route
             path="/newBlog"
             element={<NewBlog />}
+          />
+          <Route
+            path="*"
+            element={<NotFound />}
           />
         </Routes>
         <Footer />
