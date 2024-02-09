@@ -189,7 +189,9 @@ exports.logout = async (req, res) => {
     const token = null;
     const options = {
       expires: new Date(Date.now()),
-      httpOnly: true,
+      httpOnly: false,
+      sameSite: "None",
+      secure: true,
     };
 
     return res.status(200).cookie("token", token, options).json({
@@ -282,7 +284,9 @@ exports.deleteProfile = async (req, res) => {
     }
     res.cookie("token", null, {
       expires: new Date(Date.now()),
-      httpOnly: true,
+      httpOnly: false,
+      sameSite: "None",
+      secure: true,
     });
 
     return res.status(200).json({
