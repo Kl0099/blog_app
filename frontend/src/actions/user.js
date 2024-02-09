@@ -28,7 +28,7 @@ export const loginuser = (email, password) => async (dispatch) => {
   try {
     dispatch(loginrequest());
     const { data } = await axios.post(
-      "http://localhost:4000/api/v1/login",
+      "https://blogapp-lymy.onrender.com/api/v1/login",
       { email, password },
       {
         withCredentials: true,
@@ -61,7 +61,7 @@ export const registeruser =
     try {
       dispatch(registerrequest());
       const { data } = await axios.post(
-        "http://localhost:4000/api/v1/register",
+        "https://blogapp-lymy.onrender.com/api/v1/register",
         { email, password, name, avatar, otp },
         {
           withCredentials: true,
@@ -87,9 +87,12 @@ export const loaduser = () => async (dispatch) => {
       dispatch(loadusersuccess(user));
     }
 
-    const { data } = await axios.get("http://localhost:4000/api/v1/user/me", {
-      withCredentials: true,
-    });
+    const { data } = await axios.get(
+      "https://blogapp-lymy.onrender.com/api/v1/user/me",
+      {
+        withCredentials: true,
+      }
+    );
     // console.log(data)
     dispatch(loadusersuccess(data.user));
   } catch (error) {
@@ -101,7 +104,7 @@ export const getBlogsOfUser = (id) => async (dispatch) => {
   try {
     dispatch(userBlogrequest());
     const { data } = await axios.get(
-      `http://localhost:4000/api/v1/userBlogs/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/userBlogs/${id}`,
       {
         withCredentials: true,
       }
@@ -116,7 +119,7 @@ export const getUser = (id) => async (dispatch) => {
   try {
     dispatch(userProfilerequest());
     const { data } = await axios.get(
-      `http://localhost:4000/api/v1/user/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/user/${id}`,
       {
         withCredentials: true,
       }
@@ -131,7 +134,7 @@ export const edituser = (email, name, avatar) => async (dispatch) => {
   try {
     dispatch(edituserProfileRequest());
     const { data } = await axios.put(
-      `http://localhost:4000/api/v1/user/updateprofile`,
+      `https://blogapp-lymy.onrender.com/api/v1/user/updateprofile`,
       { email, name, avatar },
       {
         withCredentials: true,
@@ -149,9 +152,12 @@ export const edituser = (email, name, avatar) => async (dispatch) => {
 export const logoutUser = () => async (dispatch) => {
   try {
     dispatch(logoutrequest());
-    const { data } = await axios.get("http://localhost:4000/api/v1/logout", {
-      withCredentials: true,
-    });
+    const { data } = await axios.get(
+      "https://blogapp-lymy.onrender.com/api/v1/logout",
+      {
+        withCredentials: true,
+      }
+    );
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     dispatch(logoutsuccess(data.message));

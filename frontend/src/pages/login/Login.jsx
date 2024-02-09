@@ -46,7 +46,7 @@ const Login = () => {
     } else {
       setLoading(!loading);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/forgotpassword/sendotp",
+        "https://blogapp-lymy.onrender.com/api/v1/user/forgotpassword/sendotp",
         { email },
         {
           withCredentials: true,
@@ -62,7 +62,7 @@ const Login = () => {
     try {
       setLoading(!loading);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/forgotpassword/verifyotp",
+        "https://blogapp-lymy.onrender.com/api/v1/user/forgotpassword/verifyotp",
         { otp },
         {
           withCredentials: true,

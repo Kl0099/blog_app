@@ -30,9 +30,12 @@ import {
 export const getAllblogs = () => async (dispatch) => {
   try {
     dispatch(blogRequest());
-    const { data } = await axios.get("http://localhost:4000/api/v1/Blog", {
-      withCredentials: true,
-    });
+    const { data } = await axios.get(
+      "https://blogapp-lymy.onrender.com/api/v1/Blog",
+      {
+        withCredentials: true,
+      }
+    );
     // console.log(data)
     dispatch(blogSuccess(data.blog));
   } catch (error) {
@@ -44,7 +47,7 @@ export const getSingleBlog = (id) => async (dispatch) => {
   try {
     dispatch(singleblogRequest());
     const { data } = await axios.get(
-      `http://localhost:4000/api/v1/BlogSingle/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/BlogSingle/${id}`,
       {
         withCredentials: true,
       }
@@ -62,7 +65,7 @@ export const updateBlog =
       dispatch(editblogRequest());
 
       const { data } = await axios.put(
-        `http://localhost:4000/api/v1/Blog/${id}`,
+        `https://blogapp-lymy.onrender.com/api/v1/Blog/${id}`,
         {
           title,
           description,
@@ -92,7 +95,7 @@ export const createBlog = (title, description, image) => async (dispatch) => {
   try {
     dispatch(createblogRequest());
     const { data } = await axios.post(
-      "http://localhost:4000/api/v1/Blog/create",
+      "https://blogapp-lymy.onrender.com/api/v1/Blog/create",
       { title: title, description: description, image: image },
       {
         withCredentials: true,
@@ -112,7 +115,7 @@ export const commentaddandupdate = (id, comment) => async (dispatch) => {
   try {
     dispatch(addCommentblogRequest());
     const { data } = await axios.put(
-      `http://localhost:4000/api/v1/Blog/comment/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/Blog/comment/${id}`,
       { comment },
       {
         withCredentials: true,
@@ -132,7 +135,7 @@ export const deleteComment = (id, commentId) => async (dispatch) => {
   try {
     dispatch(deletCommentblogRequest());
     const { data } = await axios.delete(
-      `http://localhost:4000/api/v1/Blog/comment/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/Blog/comment/${id}`,
 
       {
         data: { commentId },
@@ -152,7 +155,7 @@ export const likedAnsDisliked = (id) => async (dispatch) => {
   try {
     dispatch(likeblogRequest());
     const { data } = await axios.get(
-      `http://localhost:4000/api/v1/Blog/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/Blog/${id}`,
       {
         withCredentials: true,
         headers: {
@@ -170,7 +173,7 @@ export const deleteBlog = (id) => async (dispatch) => {
   try {
     dispatch(deletblogRequest());
     const { data } = await axios.delete(
-      `http://localhost:4000/api/v1/Blog/${id}`,
+      `https://blogapp-lymy.onrender.com/api/v1/Blog/${id}`,
       {
         withCredentials: true,
         headers: {

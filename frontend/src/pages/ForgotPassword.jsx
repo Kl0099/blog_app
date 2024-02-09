@@ -21,7 +21,7 @@ const ForgotPassword = () => {
         alert("password does not match");
       } else {
         const response = await axios.post(
-          "http://localhost:4000/api/v1/user/forgotpassword",
+          "https://blogapp-lymy.onrender.com/api/v1/user/forgotpassword",
           {
             id: id,
             newPassword: password,

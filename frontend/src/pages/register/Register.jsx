@@ -31,7 +31,7 @@ const Register = () => {
     e.preventDefault();
     setToggle(!toggle);
     const { data } = await axios.post(
-      `http://localhost:4000/api/v1/user/sendotp`,
+      `https://blogapp-lymy.onrender.com/api/v1/user/sendotp`,
       {
         email,
       },
