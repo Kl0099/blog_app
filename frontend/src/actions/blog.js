@@ -27,22 +27,31 @@ import {
   singleblogSuccess,
 } from "../reducers/blog";
 
-export const getAllblogs = () => async (dispatch) => {
+const commonTryCatch = async (dispatch, actionFunction, actionCreate, actionError) => {
   try {
-    dispatch(blogRequest());
-    const { data } = await axios.get(
-      "https://blogapp-lymy.onrender.com/api/v1/Blog",
-      {
-        withCredentials: true,
-      }
-    );
-    // console.log(data)
-    dispatch(blogSuccess(data.blog));
-  } catch (error) {
-    console.log(error);
-    dispatch(blogFailure(error.response.data.message));
+    const { data } = await actionFunction()
+    dispatch(actionCreate(data))
+  } catch (errr) {
+    dispatch(actionError())
   }
-};
+
+}
+
+
+
+export const getAllblogs = () => async (dispatch) => {
+  dispatch(blogRequest())
+  await commonTryCatch(dispatch,
+    async () => {
+      await axios.get(
+        "https://blogapp-lymy.onrender.com/api/v1/Blog", { withCredentials: true }
+      )
+    },
+    dispatch(blogSuccess(data.blog)),
+    dispatch(blogFailure(error.response.data.message))
+  )
+}
+
 export const getSingleBlog = (id) => async (dispatch) => {
   try {
     dispatch(singleblogRequest());
@@ -53,9 +62,8 @@ export const getSingleBlog = (id) => async (dispatch) => {
       }
     );
     dispatch(singleblogSuccess(data.blog));
-    // console.log(data)
   } catch (error) {
-    console.log(error);
+
     dispatch(singleblogFailure(error.response.data.message));
   }
 };
@@ -107,7 +115,6 @@ export const createBlog = (title, description, image) => async (dispatch) => {
     dispatch(createblogSuccess(data.blog));
     dispatch(setmessage(data.message));
   } catch (error) {
-    console.log(error);
     dispatch(createblogFailure(error.response.data.message));
   }
 };
@@ -125,9 +132,7 @@ export const commentaddandupdate = (id, comment) => async (dispatch) => {
       }
     );
     dispatch(addCommentblogSuccess(data.message));
-    console.log("action file :" + data.message);
   } catch (error) {
-    console.log(error);
     dispatch(addCommentblogFailure(error.response.data.message));
   }
 };
@@ -147,7 +152,6 @@ export const deleteComment = (id, commentId) => async (dispatch) => {
     );
     dispatch(deletCommentblogSuccess(data.message));
   } catch (error) {
-    console.log("action folder : ", error);
     dispatch(deleteCommentblogFailure(error.response.data.message));
   }
 };
@@ -165,7 +169,6 @@ export const likedAnsDisliked = (id) => async (dispatch) => {
     );
     dispatch(likeblogSuccess(data.message));
   } catch (error) {
-    console.log("like error ", error);
     dispatch(likeblogFailure(error.response.data.message));
   }
 };
@@ -183,7 +186,6 @@ export const deleteBlog = (id) => async (dispatch) => {
     );
     dispatch(deletblogSuccess(data.message));
   } catch (error) {
-    console.log("deleteblog error ", error);
     dispatch(deleteblogFailure(error.response.data.message));
   }
 };
